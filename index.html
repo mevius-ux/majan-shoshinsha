@@ -423,10 +423,10 @@
       background: #fffbeb; border: 1.5px solid #f59e0b;
       border-radius: 10px; padding: 10px 14px; margin: 8px 0;
       font-size: 12px; color: #92400e; line-height: 1.6;
-      cursor: pointer; transition: box-shadow .15s, background .15s;
-      user-select: none;
+      transition: box-shadow .15s, background .15s;
     }
-    .legacy-box:hover { box-shadow: 0 0 0 2px rgba(245,158,11,.35); }
+    .legacy-box[data-optid] { cursor: pointer; user-select: none; }
+    .legacy-box[data-optid]:hover { box-shadow: 0 0 0 2px rgba(245,158,11,.35); }
     .legacy-box.selected {
       background: #fef3c7; border-color: #d97706;
       box-shadow: 0 0 0 2px rgba(245,158,11,.35);
@@ -864,10 +864,10 @@
             <div class="rule-card-body">
               <div class="rule-para"><b>ウマ</b>：半荘終了時の着順に応じてポイントをやり取りする仕組み。4位→1位、3位→2位の順で渡します。</div>
               <div class="rule-para" style="margin-bottom:4px"><b>ゴットー</b>：ウマが「+20/+10」の取り決め（1着+20P・2着+10P・3着−10P・4着−20P）。</div>
-              <div class="legacy-box" data-optid="legacy-gottoo" onclick="toggleOpt('legacy-gottoo','📜 ゴットー（ウマ+20/+10）')"><div class="legacy-hdr">📜 昔はこういうのがあったようですが現在は賭博罪に該当する可能性あり<span class="legacy-sel-badge">✓</span></div>テンゴでは500円・1000円の授受になることからこの名がつきました（「ゴ」=500円、「トー」=1000円）。</div>
+              <div class="legacy-box"><div class="legacy-hdr">📜 昔はこういうのがあったようですが現在は賭博罪に該当する可能性あり</div>テンゴでは500円・1000円の授受になることからこの名がつきました（「ゴ」=500円、「トー」=1000円）。</div>
               <div class="rule-para" style="margin-bottom:4px"><b>ワンスリー</b>：ウマが「+30/+10」の取り決め（1着+30P・2着+10P・3着−10P・4着−30P）。</div>
-              <div class="legacy-box" data-optid="legacy-wansuri" onclick="toggleOpt('legacy-wansuri','📜 ワンスリー（ウマ+30/+10）')"><div class="legacy-hdr">📜 昔はこういうのがあったようですが現在は賭博罪に該当する可能性あり<span class="legacy-sel-badge">✓</span></div>テンピンでは1000円・3000円の授受になります。</div>
-              <div class="legacy-box" data-optid="legacy-uma-note" onclick="toggleOpt('legacy-uma-note','📜 ウマとレートの組み合わせ（参考）')"><div class="legacy-hdr">📜 昔はこういうのがあったようですが現在は賭博罪に該当する可能性あり<span class="legacy-sel-badge">✓</span></div>※どちらもウマの呼称であり、レートとは独立しています。テンゴでワンスリー、テンピンでゴットーという組み合わせも存在していたようです。</div>
+              <div class="legacy-box"><div class="legacy-hdr">📜 昔はこういうのがあったようですが現在は賭博罪に該当する可能性あり</div>テンピンでは1000円・3000円の授受になります。</div>
+              <div class="legacy-box"><div class="legacy-hdr">📜 昔はこういうのがあったようですが現在は賭博罪に該当する可能性あり</div>※どちらもウマの呼称であり、レートとは独立しています。テンゴでワンスリー、テンピンでゴットーという組み合わせも存在していたようです。</div>
               <div class="rule-para"><b>オカ</b>：配給原点と返し点の差額をもとに、順位計算時にトップへ加算されるトップ賞。25000点持ち・30000点返しではトップへ20,000点相当（オカ20）が加算され、30000点持ち・30000点返しではオカなしになります。精算は「素点 → 返し点計算 → ウマ・オカ加算」です。</div>
             </div>
           </div>
@@ -888,7 +888,7 @@
           <div class="rule-card">
             <div class="rule-card-title">🔢 レート・費用</div>
             <div class="rule-card-body">
-              <div class="legacy-box" data-optid="legacy-rate" onclick="toggleOpt('legacy-rate','📜 レート（テンサン/テンゴ/テンピン）')"><div class="legacy-hdr">📜 昔はこういうのがあったようですが現在は賭博罪に該当する可能性あり<span class="legacy-sel-badge">✓</span></div><b>レート</b>：1000点あたりの金額。テンサン（30円）・テンゴ（50円）・テンピン（100円）</div>
+              <div class="legacy-box"><div class="legacy-hdr">📜 昔はこういうのがあったようですが現在は賭博罪に該当する可能性あり</div><b>レート</b>：1000点あたりの金額。<div class="rule-opts" style="margin-top:8px"><button class="ropt-btn" data-rule="rate" data-val="tensan" onclick="selectOpt('rate','レート','テンサン（30円）')">テンサン（30円）</button><button class="ropt-btn" data-rule="rate" data-val="tengo" onclick="selectOpt('rate','レート','テンゴ（50円）')">テンゴ（50円）</button><button class="ropt-btn" data-rule="rate" data-val="tenpin" onclick="selectOpt('rate','レート','テンピン（100円）')">テンピン（100円）</button></div></div>
               <div class="rule-para"><b>場代（ゲーム代）</b>：半荘ごとに店へ支払う利用料金。</div>
               <div class="legacy-box" data-optid="legacy-azukari" onclick="toggleOpt('legacy-azukari','📜 預かり金（保証金）')"><div class="legacy-hdr">📜 昔はこういうのがあったようですが現在は賭博罪に該当する可能性あり<span class="legacy-sel-badge">✓</span></div><b>預かり金</b>：入店時に負け逃げ防止として店に預ける保証金。テンゴなら1,000〜3,000円、テンピンなら3,000〜5,000円が相場。精算時に返金または差し引きされます。</div>
             </div>
