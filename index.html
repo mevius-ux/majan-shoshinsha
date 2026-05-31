@@ -307,6 +307,97 @@
       .hero-title { font-size: 20px; }
       .tab-btn { font-size: 11px; padding: 4px 8px; }
     }
+
+    /* ===== RULES PANEL (right sidebar) ===== */
+    .rules-panel {
+      position: fixed; top: 60px; right: 0;
+      width: 188px; max-height: calc(100vh - 68px);
+      background: #fff; border: 1.5px solid #c7d2fe; border-right: none;
+      border-radius: 12px 0 0 12px;
+      box-shadow: -2px 4px 16px rgba(99,102,241,.12);
+      z-index: 80; display: none; flex-direction: column; font-size: 12px;
+    }
+    .rules-panel.show { display: flex; }
+    .rules-panel-hdr {
+      padding: 10px 12px; font-size: 12px; font-weight: 700; color: #4338ca;
+      border-bottom: 1px solid #e5e7eb;
+      display: flex; align-items: center; gap: 6px; flex-shrink: 0;
+    }
+    .rules-panel-cnt {
+      background: #6366f1; color: #fff; border-radius: 10px;
+      padding: 1px 7px; font-size: 10px; margin-left: auto;
+    }
+    .rules-panel-body { flex: 1; overflow-y: auto; padding: 8px 10px; }
+    .rules-panel-empty { color: #9ca3af; font-size: 11px; text-align: center; padding: 10px 0; line-height: 1.7; }
+    .rules-panel-item {
+      display: flex; align-items: flex-start; gap: 5px;
+      padding: 5px 0; border-bottom: 1px solid #f3f4f6; line-height: 1.4; color: #374151;
+    }
+    .rules-panel-item:last-child { border-bottom: none; }
+    .rules-panel-tick { color: #6366f1; font-size: 12px; flex-shrink: 0; margin-top: 1px; }
+    .rules-panel-clear {
+      border-top: 1px solid #f3f4f6; padding: 8px 10px; flex-shrink: 0;
+    }
+    .rules-panel-clear button {
+      width: 100%; font-size: 11px; color: #9ca3af; background: none;
+      border: 1px solid #e5e7eb; border-radius: 6px; padding: 4px 0; cursor: pointer;
+    }
+    .rules-panel-clear button:hover { color: #6b7280; border-color: #d1d5db; }
+
+    /* Mobile FAB */
+    .rules-fab {
+      position: fixed; bottom: 24px; right: 16px;
+      background: #6366f1; color: #fff; border: none; border-radius: 30px;
+      padding: 10px 16px; font-size: 13px; font-weight: 700;
+      cursor: pointer; z-index: 200; display: none;
+      align-items: center; gap: 6px;
+      box-shadow: 0 4px 14px rgba(99,102,241,.45);
+    }
+    .rules-fab.show { display: flex; }
+    .rules-fab-cnt {
+      background: #fff; color: #6366f1; border-radius: 10px;
+      padding: 1px 7px; font-size: 11px; font-weight: 700;
+    }
+
+    /* Mobile drawer */
+    .rules-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.4); z-index: 290; display: none; }
+    .rules-overlay.open { display: block; }
+    .rules-drawer {
+      position: fixed; bottom: 0; left: 0; right: 0;
+      background: #fff; border-radius: 16px 16px 0 0; border-top: 2px solid #c7d2fe;
+      padding: 16px; max-height: 65vh; overflow-y: auto;
+      z-index: 300; transform: translateY(100%); transition: transform .3s ease;
+    }
+    .rules-drawer.open { transform: none; }
+    .rules-drawer-hdr {
+      display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;
+    }
+    .rules-drawer-title { font-size: 14px; font-weight: 700; color: #4338ca; }
+    .rules-drawer-close {
+      background: none; border: none; cursor: pointer; font-size: 22px; color: #6b7280; line-height: 1;
+    }
+
+    /* on large screens: show panel, hide FAB */
+    @media (min-width: 1200px) {
+      .rules-fab { display: none !important; }
+    }
+    @media (max-width: 1199px) {
+      .rules-panel { display: none !important; }
+    }
+
+    /* Checkable rule items */
+    .info-item.checkable { cursor: pointer; user-select: none; border-radius: 8px; }
+    .info-item.checkable:hover { background: #f5f7ff; }
+    .info-item.checked { background: #eef2ff !important; padding-left: 7px; border-left: 3px solid #6366f1; }
+    .rule-cb { flex-shrink: 0; width: 15px; height: 15px; accent-color: #6366f1; pointer-events: none; margin-top: 2px; }
+
+    /* Revert button */
+    .revert-btn {
+      display: none; width: 100%; margin-top: 10px; padding: 8px 0;
+      border-radius: 8px; border: 1.5px solid #d1d5db; background: #f9fafb;
+      font-size: 12px; color: #6b7280; cursor: pointer; transition: all .15s;
+    }
+    .revert-btn:hover { border-color: #6366f1; color: #4338ca; background: #eef2ff; }
   </style>
 </head>
 <body>
@@ -543,6 +634,33 @@
 
 </div>
 
+<!-- Rules panel (desktop right sidebar) -->
+<div id="rules-panel" class="rules-panel">
+  <div class="rules-panel-hdr">📋 今回のルール<span id="rp-cnt" class="rules-panel-cnt">0</span></div>
+  <div class="rules-panel-body">
+    <div id="rp-list"></div>
+    <div id="rp-empty" class="rules-panel-empty">ステップ２で<br>項目をタップして<br>チェックすると<br>ここに表示されます</div>
+  </div>
+  <div class="rules-panel-clear"><button onclick="clearRules()">チェックをリセット</button></div>
+</div>
+
+<!-- Rules FAB (mobile) -->
+<button id="rules-fab" class="rules-fab" onclick="openRulesDrawer()">
+  📋 今回のルール <span id="fab-cnt" class="rules-fab-cnt">0</span>
+</button>
+
+<!-- Rules drawer overlay + drawer (mobile) -->
+<div id="rules-overlay" class="rules-overlay" onclick="closeRulesDrawer()"></div>
+<div id="rules-drawer" class="rules-drawer">
+  <div class="rules-drawer-hdr">
+    <div class="rules-drawer-title">📋 今回のルール</div>
+    <button class="rules-drawer-close" onclick="closeRulesDrawer()">×</button>
+  </div>
+  <div id="rd-list"></div>
+  <div id="rd-empty" class="rules-panel-empty">ステップ２でルールをチェックすると表示されます</div>
+  <div style="margin-top:12px"><button onclick="clearRules();closeRulesDrawer()" style="width:100%;font-size:12px;color:#9ca3af;background:none;border:1px solid #e5e7eb;border-radius:8px;padding:6px 0;cursor:pointer">チェックをリセット</button></div>
+</div>
+
 <!-- Toast -->
 <div class="toast" id="toast"></div>
 
@@ -688,14 +806,15 @@
         body: `
           <div class="detail-section">
             <div class="tip-box"><strong>ルール設定はスタッフに頼もう</strong><br>卓についたらスタッフを呼んで「ルール設定お願いします」と声をかける。設定が終わればそのまま開始できる。<br>仲間内のローカルルールは<b>全員で事前に口頭確認</b>しておくとトラブルが少ない。</div>
+            <div class="tip-box" style="background:#f0fdf4;border-color:#bbf7d0;color:#166534"><strong>📋 採用するルールをチェック</strong><br>各項目をタップするとチェックでき、画面右側（スマホは下のボタン）でいつでも確認できます。</div>
           </div>
 
           <div class="detail-section">
             <div class="detail-title">① 基本設定（スタッフに伝える）</div>
             <div class="info-list">
-              <div class="info-item"><span class="info-icon">👥</span><div class="info-text"><b>ヨンマ or サンマ</b>：4人打ち（ヨンマ）か3人打ち（サンマ）か。関東はヨンマが多い</div></div>
-              <div class="info-item"><span class="info-icon">🔄</span><div class="info-text"><b>東風戦 or 半荘</b>：東風戦は東場4局のみ（約30〜40分）。半荘は東南場の8局（約60〜90分）。時間が少ないなら東風戦</div></div>
-              <div class="info-item"><span class="info-icon">💯</span><div class="info-text"><b>持ち点・返し点</b>：一般的は「25,000点持ち・30,000点返し」。30,000点持ちの店もある。差分がオカ（トップ総取り）になる</div></div>
+              <div class="info-item checkable" id="ri-yonma" onclick="toggleRule('yonma','ヨンマ/サンマ')"><input type="checkbox" id="cb-yonma" class="rule-cb"><span class="info-icon">👥</span><div class="info-text"><b>ヨンマ or サンマ</b>：4人打ち（ヨンマ）か3人打ち（サンマ）か。関東はヨンマが多い</div></div>
+              <div class="info-item checkable" id="ri-kyoku" onclick="toggleRule('kyoku','局数（東風/半荘）')"><input type="checkbox" id="cb-kyoku" class="rule-cb"><span class="info-icon">🔄</span><div class="info-text"><b>東風戦 or 半荘</b>：東風戦は東場4局のみ（約30〜40分）。半荘は東南場の8局（約60〜90分）。時間が少ないなら東風戦</div></div>
+              <div class="info-item checkable" id="ri-mochiten" onclick="toggleRule('mochiten','持ち点・返し点')"><input type="checkbox" id="cb-mochiten" class="rule-cb"><span class="info-icon">💯</span><div class="info-text"><b>持ち点・返し点</b>：一般的は「25,000点持ち・30,000点返し」。30,000点持ちの店もある。差分がオカ（トップ総取り）になる</div></div>
               <div class="info-item"><span class="info-icon">🎓</span><div class="info-text"><b>学割</b>：学生証提示で料金が半額になる店が多い</div></div>
               <div class="info-item"><span class="info-icon">⏱️</span><div class="info-text">打つ時間の目安を伝えておくとスムーズ（「2〜3時間くらい」など）</div></div>
             </div>
@@ -704,37 +823,37 @@
           <div class="detail-section">
             <div class="detail-title">② ドラ関連（仲間内で決める）</div>
             <div class="info-list">
-              <div class="info-item"><span class="info-icon">🀄</span><div class="info-text"><b>赤ドラ</b>：なし・各色1枚（5m/5p/5s）・各色2枚から選ぶ。枚数が増えるほど点数が荒れやすい</div></div>
-              <div class="info-item"><span class="info-icon">🃏</span><div class="info-text"><b>裏ドラ</b>：リーチ和了時に表示。あり/なし。なしにすると点数がおとなしくなる</div></div>
-              <div class="info-item"><span class="info-icon">➕</span><div class="info-text"><b>カンドラ・槓裏ドラ</b>：カンするたびにドラが増える。槓裏はリーチ時のカンにさらに裏ドラが付く</div></div>
-              <div class="info-item"><span class="info-icon">🌸</span><div class="info-text"><b>花牌（はなぱい）</b>：一部の自動卓に入っている特殊牌。得点ボーナスになるローカルルール。店のデフォルト設定に従うことが多い</div></div>
-              <div class="info-item"><span class="info-icon">⬆️</span><div class="info-text"><b>北抜き（サンマのみ）</b>：サンマでは北を抜きドラとして使うルールが多い。あり/なしを確認</div></div>
+              <div class="info-item checkable" id="ri-akadora" onclick="toggleRule('akadora','赤ドラ枚数')"><input type="checkbox" id="cb-akadora" class="rule-cb"><span class="info-icon">🀄</span><div class="info-text"><b>赤ドラ</b>：なし・各色1枚（5m/5p/5s）・各色2枚から選ぶ。枚数が増えるほど点数が荒れやすい</div></div>
+              <div class="info-item checkable" id="ri-urador" onclick="toggleRule('urador','裏ドラ')"><input type="checkbox" id="cb-urador" class="rule-cb"><span class="info-icon">🃏</span><div class="info-text"><b>裏ドラ</b>：リーチ和了時に表示。あり/なし。なしにすると点数がおとなしくなる</div></div>
+              <div class="info-item checkable" id="ri-kandora" onclick="toggleRule('kandora','カンドラ/槓裏')"><input type="checkbox" id="cb-kandora" class="rule-cb"><span class="info-icon">➕</span><div class="info-text"><b>カンドラ・槓裏ドラ</b>：カンするたびにドラが増える。槓裏はリーチ時のカンにさらに裏ドラが付く</div></div>
+              <div class="info-item checkable" id="ri-hana" onclick="toggleRule('hana','花牌')"><input type="checkbox" id="cb-hana" class="rule-cb"><span class="info-icon">🌸</span><div class="info-text"><b>花牌（はなぱい）</b>：一部の自動卓に入っている特殊牌。得点ボーナスになるローカルルール。店のデフォルト設定に従うことが多い</div></div>
+              <div class="info-item checkable" id="ri-kita" onclick="toggleRule('kita','北抜き（サンマ）')"><input type="checkbox" id="cb-kita" class="rule-cb"><span class="info-icon">⬆️</span><div class="info-text"><b>北抜き（サンマのみ）</b>：サンマでは北を抜きドラとして使うルールが多い。あり/なしを確認</div></div>
             </div>
           </div>
 
           <div class="detail-section">
             <div class="detail-title">③ 役・進行ルール（仲間内で決める）</div>
             <div class="info-list">
-              <div class="info-item"><span class="info-icon">🍜</span><div class="info-text"><b>喰いタン（後付け）</b>：鳴いてタンヤオのみでアガれるか。「あり」が一般的だが「なし」にすると手役重視になる</div></div>
-              <div class="info-item"><span class="info-icon">⚡</span><div class="info-text"><b>一発</b>：リーチ後1順以内の和了に+1翻。あり/なし</div></div>
-              <div class="info-item"><span class="info-icon">🔂</span><div class="info-text"><b>リーチ後の暗カン</b>：テンパイの形が変わらない場合のみ許可が一般的。「完全禁止」にする仲間内もいる</div></div>
-              <div class="info-item"><span class="info-icon">🌊</span><div class="info-text"><b>流し満貫</b>：自分の捨て牌が全て端牌・字牌で流局した場合に満貫点を得るルール。あり/なし</div></div>
-              <div class="info-item"><span class="info-icon">🃏</span><div class="info-text"><b>ダブルリーチ</b>：第1打でテンパイしてのリーチに+1翻。あり/なし</div></div>
-              <div class="info-item"><span class="info-icon">🏆</span><div class="info-text"><b>ダブル役満・トリプル役満</b>：大三元＋字一色など複合役満を2倍・3倍にするか。なしにすると最大1役満（32,000点）まで</div></div>
-              <div class="info-item"><span class="info-icon">🛑</span><div class="info-text"><b>途中流局</b>：九種九牌（配牌で么九牌9種以上）・四風子連打・四家リーチ・四カン流れなどの途中流局をどうするか</div></div>
-              <div class="info-item"><span class="info-icon">💥</span><div class="info-text"><b>パオ（責任払い）</b>：大三元・大四喜・字一色の確定牌を鳴かせた人が放銃分を責任払いするルール。あり/なし</div></div>
-              <div class="info-item"><span class="info-icon">🔵</span><div class="info-text"><b>青天井</b>：点数の上限をなくして符・翻数通りに計算するルール。通常は満貫以上に打ち止めがあるが、青天井は役満を超えた計算も有効になる</div></div>
+              <div class="info-item checkable" id="ri-kuitain" onclick="toggleRule('kuitain','喰いタン（後付け）')"><input type="checkbox" id="cb-kuitain" class="rule-cb"><span class="info-icon">🍜</span><div class="info-text"><b>喰いタン（後付け）</b>：鳴いてタンヤオのみでアガれるか。「あり」が一般的だが「なし」にすると手役重視になる</div></div>
+              <div class="info-item checkable" id="ri-ippatsu" onclick="toggleRule('ippatsu','一発')"><input type="checkbox" id="cb-ippatsu" class="rule-cb"><span class="info-icon">⚡</span><div class="info-text"><b>一発</b>：リーチ後1順以内の和了に+1翻。あり/なし</div></div>
+              <div class="info-item checkable" id="ri-rkan" onclick="toggleRule('rkan','リーチ後暗カン')"><input type="checkbox" id="cb-rkan" class="rule-cb"><span class="info-icon">🔂</span><div class="info-text"><b>リーチ後の暗カン</b>：テンパイの形が変わらない場合のみ許可が一般的。「完全禁止」にする仲間内もいる</div></div>
+              <div class="info-item checkable" id="ri-nagashi" onclick="toggleRule('nagashi','流し満貫')"><input type="checkbox" id="cb-nagashi" class="rule-cb"><span class="info-icon">🌊</span><div class="info-text"><b>流し満貫</b>：自分の捨て牌が全て端牌・字牌で流局した場合に満貫点を得るルール。あり/なし</div></div>
+              <div class="info-item checkable" id="ri-driichi" onclick="toggleRule('driichi','ダブルリーチ')"><input type="checkbox" id="cb-driichi" class="rule-cb"><span class="info-icon">🃏</span><div class="info-text"><b>ダブルリーチ</b>：第1打でテンパイしてのリーチに+1翻。あり/なし</div></div>
+              <div class="info-item checkable" id="ri-dyakuman" onclick="toggleRule('dyakuman','ダブル/トリプル役満')"><input type="checkbox" id="cb-dyakuman" class="rule-cb"><span class="info-icon">🏆</span><div class="info-text"><b>ダブル役満・トリプル役満</b>：大三元＋字一色など複合役満を2倍・3倍にするか。なしにすると最大1役満（32,000点）まで</div></div>
+              <div class="info-item checkable" id="ri-tochuryu" onclick="toggleRule('tochuryu','途中流局')"><input type="checkbox" id="cb-tochuryu" class="rule-cb"><span class="info-icon">🛑</span><div class="info-text"><b>途中流局</b>：九種九牌（配牌で么九牌9種以上）・四風子連打・四家リーチ・四カン流れなどの途中流局をどうするか</div></div>
+              <div class="info-item checkable" id="ri-pao" onclick="toggleRule('pao','パオ（責任払い）')"><input type="checkbox" id="cb-pao" class="rule-cb"><span class="info-icon">💥</span><div class="info-text"><b>パオ（責任払い）</b>：大三元・大四喜・字一色の確定牌を鳴かせた人が放銃分を責任払いするルール。あり/なし</div></div>
+              <div class="info-item checkable" id="ri-aozora" onclick="toggleRule('aozora','青天井')"><input type="checkbox" id="cb-aozora" class="rule-cb"><span class="info-icon">🔵</span><div class="info-text"><b>青天井</b>：点数の上限をなくして符・翻数通りに計算するルール。通常は満貫以上に打ち止めがあるが、青天井は役満を超えた計算も有効になる</div></div>
             </div>
           </div>
 
           <div class="detail-section">
             <div class="detail-title">④ 精算ルール（仲間内で決める）</div>
             <div class="info-list">
-              <div class="info-item"><span class="info-icon">📊</span><div class="info-text"><b>ウマ</b>：順位によるボーナス/ペナルティ。よく使われるのは「5-10」（1位+10pt、2位+5pt、3位-5pt、4位-10pt）や「10-30」（より差が大きい）</div></div>
-              <div class="info-item"><span class="info-icon">🎁</span><div class="info-text"><b>オカ</b>：25,000点持ち・30,000点返しなら差の5,000点×4人分（計20,000点）がオカとしてトップに入る。返し点の設定次第で変わる</div></div>
-              <div class="info-item"><span class="info-icon">🏅</span><div class="info-text"><b>飛び賞（とびしょう）</b>：持ち点が0点以下になった（ハコ割れ）プレイヤーから一定点を受け取るルール。「あり（5pt）」「なし」など</div></div>
-              <div class="info-item"><span class="info-icon">🎰</span><div class="info-text"><b>チップ（ご祝儀）</b>：一発・裏ドラ・嶺上開花・役満などで獲得できるボーナス。1枚いくらかを決める。なしにするとシンプルになる</div></div>
-              <div class="info-item"><span class="info-icon">📏</span><div class="info-text"><b>積み棒の点数</b>：通常1本=300点（ツモ100点×3人 or 放銃者300点）。仲間内によっては「1本600点」などに変えるケースも</div></div>
+              <div class="info-item checkable" id="ri-uma" onclick="toggleRule('uma','ウマ設定')"><input type="checkbox" id="cb-uma" class="rule-cb"><span class="info-icon">📊</span><div class="info-text"><b>ウマ</b>：順位によるボーナス/ペナルティ。よく使われるのは「5-10」（1位+10pt、2位+5pt、3位-5pt、4位-10pt）や「10-30」（より差が大きい）</div></div>
+              <div class="info-item checkable" id="ri-oka" onclick="toggleRule('oka','オカ（返し点）')"><input type="checkbox" id="cb-oka" class="rule-cb"><span class="info-icon">🎁</span><div class="info-text"><b>オカ</b>：25,000点持ち・30,000点返しなら差の5,000点×4人分（計20,000点）がオカとしてトップに入る。返し点の設定次第で変わる</div></div>
+              <div class="info-item checkable" id="ri-tobi" onclick="toggleRule('tobi','飛び賞')"><input type="checkbox" id="cb-tobi" class="rule-cb"><span class="info-icon">🏅</span><div class="info-text"><b>飛び賞（とびしょう）</b>：持ち点が0点以下になった（ハコ割れ）プレイヤーから一定点を受け取るルール。「あり（5pt）」「なし」など</div></div>
+              <div class="info-item checkable" id="ri-chip" onclick="toggleRule('chip','チップ（ご祝儀）')"><input type="checkbox" id="cb-chip" class="rule-cb"><span class="info-icon">🎰</span><div class="info-text"><b>チップ（ご祝儀）</b>：一発・裏ドラ・嶺上開花・役満などで獲得できるボーナス。1枚いくらかを決める。なしにするとシンプルになる</div></div>
+              <div class="info-item checkable" id="ri-tsumibo" onclick="toggleRule('tsumibo','積み棒の点数')"><input type="checkbox" id="cb-tsumibo" class="rule-cb"><span class="info-icon">📏</span><div class="info-text"><b>積み棒の点数</b>：通常1本=300点（ツモ100点×3人 or 放銃者300点）。仲間内によっては「1本600点」などに変えるケースも</div></div>
             </div>
           </div>
 
@@ -807,6 +926,7 @@
 
   let states = [];
   let mode = null;
+  let checkedRules = {};
 
   function save() {
     localStorage.setItem('mjStates', JSON.stringify(states));
@@ -817,6 +937,7 @@
     const m = localStorage.getItem('mjMode');
     if (m) mode = m || null;
     if (s) { try { states = JSON.parse(s); } catch(e) {} }
+    try { const r = localStorage.getItem('mjRules'); if (r) checkedRules = JSON.parse(r); } catch(e) {}
   }
 
   /* ---- ステッパーとステップカードをDOMに生成 ---- */
@@ -870,6 +991,7 @@
           <div class="card-body" id="body-${i}">
             ${s.body}
             ${btnHtml}
+            <button class="revert-btn" id="rbtn-${i}" onclick="revertStep(${i})">↩ 進行中に戻す</button>
           </div>
         </div>`;
     }).join('');
@@ -889,6 +1011,7 @@
       const body1 = document.getElementById('body-1');
       const ct1   = document.getElementById('ct-1');
       if (body1) { body1.classList.add('open'); ct1.classList.add('open'); }
+      renderRulesPanel();
     }
   }
 
@@ -896,6 +1019,7 @@
     mode = null; states = [];
     save();
     showEntry();
+    renderRulesPanel();
   }
 
   function showFlow() {
@@ -960,6 +1084,8 @@
         const show = st === 'current';
         cbtn.style.display = show ? (cbtn.classList.contains('branch-box') ? 'block' : 'flex') : 'none';
       }
+      const rbtn = document.getElementById('rbtn-' + i);
+      if (rbtn) rbtn.style.display = (st === 'done') ? 'block' : 'none';
     }
 
     const curIdx = states.indexOf('current');
@@ -1040,14 +1166,107 @@
     setTimeout(() => t.classList.remove('show'), 2200);
   }
 
+  /* ---- rules panel ---- */
+  function toggleRule(id, label) {
+    if (checkedRules[id]) {
+      delete checkedRules[id];
+    } else {
+      checkedRules[id] = label;
+    }
+    const cb  = document.getElementById('cb-' + id);
+    const row = document.getElementById('ri-' + id);
+    if (cb)  cb.checked = !!checkedRules[id];
+    if (row) row.classList.toggle('checked', !!checkedRules[id]);
+    localStorage.setItem('mjRules', JSON.stringify(checkedRules));
+    renderRulesPanel();
+  }
+
+  function clearRules() {
+    checkedRules = {};
+    localStorage.setItem('mjRules', JSON.stringify(checkedRules));
+    document.querySelectorAll('.rule-cb').forEach(cb => cb.checked = false);
+    document.querySelectorAll('.info-item.checked').forEach(el => el.classList.remove('checked'));
+    renderRulesPanel();
+  }
+
+  function renderRulesPanel() {
+    const keys  = Object.keys(checkedRules);
+    const count = keys.length;
+    const html  = keys.map(k =>
+      `<div class="rules-panel-item"><span class="rules-panel-tick">✓</span>${checkedRules[k]}</div>`
+    ).join('');
+    const emptyMsg = 'ステップ２で<br>項目をタップして<br>チェックすると<br>ここに表示されます';
+
+    document.getElementById('rp-cnt').textContent  = count;
+    document.getElementById('rp-list').innerHTML   = html;
+    document.getElementById('rp-empty').innerHTML  = emptyMsg;
+    document.getElementById('rp-empty').style.display = count ? 'none' : 'block';
+
+    document.getElementById('fab-cnt').textContent = count;
+    document.getElementById('rd-list').innerHTML   = html;
+    document.getElementById('rd-empty').style.display = count ? 'none' : 'block';
+
+    const show = mode === 'set';
+    document.getElementById('rules-panel').classList.toggle('show', show);
+    document.getElementById('rules-fab').classList.toggle('show', show);
+  }
+
+  function restoreCheckboxes() {
+    Object.keys(checkedRules).forEach(id => {
+      const cb  = document.getElementById('cb-' + id);
+      const row = document.getElementById('ri-' + id);
+      if (cb)  cb.checked = true;
+      if (row) row.classList.add('checked');
+    });
+  }
+
+  function openRulesDrawer() {
+    document.getElementById('rules-drawer').classList.add('open');
+    document.getElementById('rules-overlay').classList.add('open');
+  }
+  function closeRulesDrawer() {
+    document.getElementById('rules-drawer').classList.remove('open');
+    document.getElementById('rules-overlay').classList.remove('open');
+  }
+
+  /* ---- revert step ---- */
+  function revertStep(idx) {
+    if (states[idx] !== 'done') return;
+    states = states.map((s, i) => {
+      if (i === idx) return 'current';
+      if (s === 'current') return 'upcoming';
+      return s;
+    });
+    save(); render();
+    setTimeout(() => {
+      const body = document.getElementById('body-' + idx);
+      const ct   = document.getElementById('ct-' + idx);
+      if (body && !body.classList.contains('open')) {
+        body.classList.add('open'); ct.classList.add('open');
+      }
+      document.getElementById('card-' + idx).scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 100);
+    showToast('ステップ ' + (idx + 1) + ' を進行中に戻しました');
+  }
+
   /* ---- init ---- */
   load();
   if (mode && STEP_DATA[mode]) {
     buildSteps();
     showFlow();
     render();
+    restoreCheckboxes();
+    renderRulesPanel();
+    if (mode === 'set') {
+      const body1 = document.getElementById('body-1');
+      const ct1   = document.getElementById('ct-1');
+      if (body1 && !body1.classList.contains('open')) {
+        body1.classList.add('open'); ct1.classList.add('open');
+      }
+    }
   } else {
     showEntry();
+    renderRulesPanel();
   }
 </script>
 </body>
