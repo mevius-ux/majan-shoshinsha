@@ -1,0 +1,834 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>はじめての雀荘ガイド</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Hiragino Sans', 'Noto Sans JP', sans-serif;
+      background: #f0f2f5;
+      color: #1a1a2e;
+      min-height: 100vh;
+    }
+
+    /* ===== HEADER ===== */
+    .site-header {
+      background: #fff;
+      border-bottom: 1px solid #e5e7eb;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 1px 4px rgba(0,0,0,.06);
+    }
+    .site-header-inner {
+      max-width: 780px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 16px;
+      height: 52px;
+      gap: 8px;
+    }
+    .site-title { font-size: 15px; font-weight: 700; white-space: nowrap; }
+    .tab-nav { display: flex; gap: 4px; overflow-x: auto; }
+    .tab-btn {
+      font-size: 12px;
+      padding: 5px 10px;
+      border: 1px solid #d1d5db;
+      border-radius: 20px;
+      background: #fff;
+      cursor: pointer;
+      color: #374151;
+      white-space: nowrap;
+      transition: background .15s, color .15s;
+    }
+    .tab-btn.active, .tab-btn:hover {
+      background: #1a1a2e; color: #fff; border-color: #1a1a2e;
+    }
+
+    /* ===== LAYOUT ===== */
+    .page-wrap { max-width: 780px; margin: 0 auto; padding: 20px 16px 80px; }
+    .section { display: none; }
+    .section.active { display: block; }
+
+    /* ===== HERO ===== */
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 5px;
+      font-size: 11px; font-weight: 600; color: #16a34a;
+      background: #dcfce7; border-radius: 20px; padding: 3px 10px; margin-bottom: 10px;
+    }
+    .hero-title { font-size: 24px; font-weight: 800; line-height: 1.3; margin-bottom: 6px; }
+    .hero-sub { font-size: 13px; color: #6b7280; margin-bottom: 24px; }
+
+    /* ===== PROGRESS BAR ===== */
+    .progress-wrap { margin-bottom: 20px; }
+    .progress-bar-bg { background: #e5e7eb; border-radius: 99px; height: 6px; margin-bottom: 6px; }
+    .progress-bar-fill { height: 6px; border-radius: 99px; background: linear-gradient(90deg,#6366f1,#818cf8); transition: width .4s ease; }
+    .progress-text { font-size: 11px; color: #6b7280; text-align: right; }
+
+    /* ===== STEPPER ===== */
+    .stepper {
+      display: flex; align-items: flex-start; margin-bottom: 28px;
+      overflow-x: auto; padding-bottom: 4px;
+    }
+    .step-item {
+      display: flex; flex-direction: column; align-items: center;
+      flex: 1; min-width: 60px; cursor: pointer; position: relative;
+    }
+    .step-item:not(:last-child)::after {
+      content: ''; position: absolute; top: 15px;
+      left: calc(50% + 15px); right: calc(-50% + 15px);
+      height: 2px; background: #e5e7eb; transition: background .3s;
+    }
+    .step-item.done:not(:last-child)::after { background: #6366f1; }
+    .step-circle {
+      width: 30px; height: 30px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 12px; font-weight: 700;
+      border: 2px solid #e5e7eb; background: #fff; color: #9ca3af;
+      position: relative; z-index: 1; transition: all .25s;
+    }
+    .step-item.done .step-circle {
+      background: #6366f1; border-color: #6366f1; color: #fff;
+      flex-direction: column; gap: 0; font-size: 10px; line-height: 1;
+    }
+    .step-item.done .step-circle .step-check { font-size: 9px; line-height: 1; }
+    .step-item.current .step-circle {
+      background: #fff; border-color: #6366f1; color: #6366f1;
+      box-shadow: 0 0 0 4px rgba(99,102,241,.18);
+    }
+    .step-label { font-size: 10px; color: #9ca3af; margin-top: 5px; text-align: center; line-height: 1.3; }
+    .step-item.done .step-label, .step-item.current .step-label { color: #4b5563; font-weight: 600; }
+
+    /* ===== PHASE GROUPS ===== */
+    .phase-group { margin-bottom: 20px; }
+    .phase-label {
+      font-size: 11px; font-weight: 700; color: #6b7280;
+      letter-spacing: .05em; margin-bottom: 8px;
+      display: flex; align-items: center; gap: 6px;
+    }
+    .phase-label::before {
+      content: ''; display: inline-block; width: 3px; height: 14px;
+      background: #6366f1; border-radius: 2px;
+    }
+
+    /* ===== CARD ===== */
+    .card {
+      background: #fff; border-radius: 12px; border: 1.5px solid #e5e7eb;
+      margin-bottom: 10px; overflow: hidden;
+      transition: box-shadow .2s, border-color .2s, opacity .3s;
+    }
+    .card:hover { border-color: #c7d2fe; }
+    .card.current-step { border-color: #6366f1; box-shadow: 0 0 0 3px rgba(99,102,241,.1); }
+    .card.done-step { opacity: .72; }
+    .card-header { display: flex; align-items: center; gap: 12px; padding: 14px 16px; cursor: pointer; }
+    .card-num {
+      width: 28px; height: 28px; border-radius: 50%; background: #f3f4f6;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 12px; font-weight: 700; color: #9ca3af; flex-shrink: 0;
+    }
+    .card.current-step .card-num { background: #6366f1; color: #fff; }
+    .card.done-step .card-num { background: #dcfce7; color: #16a34a; }
+    .card-info { flex: 1; }
+    .card-title { font-size: 14px; font-weight: 700; margin-bottom: 2px; }
+    .card-desc { font-size: 12px; color: #6b7280; }
+    .card-badge {
+      font-size: 10px; font-weight: 700; padding: 3px 8px;
+      border-radius: 20px; flex-shrink: 0;
+    }
+    .badge-done { background: #dcfce7; color: #16a34a; }
+    .badge-current { background: #e0e7ff; color: #4338ca; }
+    .badge-upcoming { background: #f3f4f6; color: #9ca3af; }
+    .card-toggle {
+      width: 24px; height: 24px; border-radius: 50%; border: 1.5px solid #e5e7eb;
+      background: #f9fafb; display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; transition: transform .2s;
+    }
+    .card-toggle.open { transform: rotate(180deg); }
+    .card-body { display: none; padding: 0 16px 16px; border-top: 1px solid #f3f4f6; }
+    .card-body.open { display: block; }
+
+    /* detail content */
+    .detail-section { margin-top: 14px; }
+    .detail-title { font-size: 12px; font-weight: 700; color: #374151; margin-bottom: 8px; }
+    .tip-box {
+      background: #fffbeb; border: 1px solid #fde68a; border-radius: 8px;
+      padding: 10px 12px; font-size: 12px; color: #92400e; line-height: 1.6; margin-bottom: 10px;
+    }
+    .tip-box strong { color: #78350f; }
+    .info-list { display: flex; flex-direction: column; gap: 6px; }
+    .info-item {
+      display: flex; gap: 8px; font-size: 12px; line-height: 1.5;
+      padding: 8px 10px; background: #f9fafb; border-radius: 8px;
+    }
+    .info-icon { flex-shrink: 0; font-size: 15px; }
+    .info-text { color: #374151; }
+    .info-text b { color: #1a1a2e; }
+    .phrase-box { background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 8px; padding: 10px 12px; margin-bottom: 8px; }
+    .phrase-q { font-size: 11px; color: #6b7280; margin-bottom: 2px; }
+    .phrase-a { font-size: 13px; font-weight: 700; color: #166534; }
+    .phrase-note { font-size: 11px; color: #6b7280; margin-top: 3px; }
+
+    /* ===== BRANCH BOX ===== */
+    .branch-box { margin-top: 14px; }
+    .branch-label {
+      font-size: 11px; font-weight: 700; color: #6b7280;
+      margin-bottom: 8px; text-align: center;
+      display: flex; align-items: center; gap: 6px; justify-content: center;
+    }
+    .branch-label::before, .branch-label::after {
+      content: ''; flex: 1; height: 1px; background: #e5e7eb;
+    }
+    .branch-row { display: flex; gap: 8px; flex-direction: column; }
+    .branch-btn {
+      display: flex; align-items: center; gap: 10px;
+      width: 100%; padding: 12px 14px; border-radius: 10px;
+      border: 1.5px solid #e5e7eb; background: #f9fafb;
+      cursor: pointer; text-align: left; transition: border-color .15s, background .15s;
+    }
+    .branch-btn:hover { border-color: #6366f1; background: #eef2ff; }
+    .branch-icon { font-size: 20px; flex-shrink: 0; }
+    .branch-text { flex: 1; display: flex; flex-direction: column; gap: 2px; }
+    .branch-text b { font-size: 13px; color: #1a1a2e; }
+    .branch-text small { font-size: 11px; color: #6b7280; }
+    .branch-arrow { font-size: 11px; font-weight: 700; color: #6366f1; white-space: nowrap; flex-shrink: 0; }
+    .branch-btn.branch-ready { border-color: #bbf7d0; background: #f0fdf4; }
+    .branch-btn.branch-ready:hover { border-color: #16a34a; background: #dcfce7; }
+    .branch-btn.branch-ready .branch-arrow { color: #16a34a; }
+
+    /* ===== COMPLETE BUTTON ===== */
+    .complete-btn {
+      display: flex; align-items: center; justify-content: center; gap: 6px;
+      width: 100%; margin-top: 14px;
+      padding: 11px 0; border-radius: 10px;
+      background: #6366f1; color: #fff;
+      font-size: 13px; font-weight: 700; border: none; cursor: pointer;
+      transition: background .15s, transform .1s;
+    }
+    .complete-btn:hover { background: #4f46e5; }
+    .complete-btn:active { transform: scale(.98); }
+
+    /* ===== COMPLETE OVERLAY (celebration) ===== */
+    .toast {
+      position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(40px);
+      background: #1a1a2e; color: #fff; padding: 10px 20px; border-radius: 30px;
+      font-size: 13px; font-weight: 600; opacity: 0;
+      transition: opacity .3s, transform .3s; z-index: 999; white-space: nowrap;
+    }
+    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+    /* ===== ALL DONE ===== */
+    .all-done {
+      display: none; flex-direction: column; align-items: center;
+      text-align: center; padding: 40px 20px;
+      background: #fff; border-radius: 16px; border: 1.5px solid #6366f1;
+      margin-top: 16px;
+    }
+    .all-done.show { display: flex; }
+    .all-done-icon { font-size: 48px; margin-bottom: 12px; }
+    .all-done-title { font-size: 20px; font-weight: 800; margin-bottom: 6px; color: #4338ca; }
+    .all-done-sub { font-size: 13px; color: #6b7280; line-height: 1.7; }
+    .reset-btn {
+      margin-top: 16px; padding: 9px 20px;
+      border-radius: 20px; border: 1.5px solid #d1d5db;
+      background: #fff; font-size: 12px; color: #6b7280;
+      cursor: pointer; transition: border-color .15s;
+    }
+    .reset-btn:hover { border-color: #6366f1; color: #6366f1; }
+
+    /* ===== TIPS / PLAY PAGE ===== */
+    .tips-grid { display: grid; gap: 12px; }
+    .tip-card { background: #fff; border-radius: 12px; border: 1.5px solid #e5e7eb; padding: 16px; }
+    .tip-card-header { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+    .tip-icon { width: 36px; height: 36px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
+    .tip-card-title { font-size: 14px; font-weight: 700; }
+    .tip-card-body { font-size: 12px; color: #4b5563; line-height: 1.7; }
+    .highlight { color: #4338ca; font-weight: 700; }
+
+    /* ===== FAQ ===== */
+    .faq-item { background: #fff; border-radius: 12px; border: 1.5px solid #e5e7eb; margin-bottom: 10px; overflow: hidden; }
+    .faq-q { padding: 14px 16px; font-size: 13px; font-weight: 700; cursor: pointer; display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+    .faq-q-text { display: flex; gap: 8px; align-items: flex-start; }
+    .faq-q-icon { color: #6366f1; font-weight: 800; flex-shrink: 0; }
+    .faq-a { display: none; padding: 10px 16px 14px 40px; font-size: 12px; color: #4b5563; line-height: 1.7; border-top: 1px solid #f3f4f6; }
+    .faq-a.open { display: block; }
+    .faq-chevron { transition: transform .2s; flex-shrink: 0; }
+    .faq-chevron.open { transform: rotate(180deg); }
+
+    /* ===== GLOSSARY ===== */
+    .glossary-grid { display: grid; gap: 10px; }
+    .gloss-card { background: #fff; border-radius: 10px; border: 1.5px solid #e5e7eb; padding: 12px 14px; display: flex; gap: 12px; }
+    .gloss-term { font-size: 14px; font-weight: 800; color: #4338ca; min-width: 70px; flex-shrink: 0; }
+    .gloss-def { font-size: 12px; color: #374151; line-height: 1.6; }
+
+    @media (max-width: 480px) {
+      .hero-title { font-size: 20px; }
+      .tab-btn { font-size: 11px; padding: 4px 8px; }
+    }
+  </style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="site-header-inner">
+    <div class="site-title">はじめての雀荘ガイド</div>
+    <nav class="tab-nav">
+      <button class="tab-btn active" onclick="showSection('flow')">入店〜着席</button>
+      <button class="tab-btn" onclick="showSection('play')">対局の流れ</button>
+      <button class="tab-btn" onclick="showSection('checkout')">精算・退店</button>
+    </nav>
+  </div>
+</header>
+
+<div class="page-wrap">
+
+  <!-- =========== 入店〜着席 =========== -->
+  <section id="flow" class="section active">
+    <div class="hero-badge">
+      <svg viewBox="0 0 16 16" fill="currentColor" width="12"><circle cx="8" cy="8" r="8"/><path d="M6 8l2 2 3-3" stroke="#fff" stroke-width="1.5" fill="none"/></svg>
+      初心者モード
+    </div>
+    <h1 class="hero-title">雀荘に入ってから<br>対局が始まるまで</h1>
+    <p class="hero-sub">「何をすればいいかわからない」を、ひとつずつ解決します。</p>
+
+    <!-- Progress bar -->
+    <div class="progress-wrap">
+      <div class="progress-bar-bg">
+        <div class="progress-bar-fill" id="progress-fill" style="width:0%"></div>
+      </div>
+      <div class="progress-text" id="progress-text">0 / 5 完了</div>
+    </div>
+
+    <!-- Stepper -->
+    <div class="stepper" id="stepper">
+      <div class="step-item" id="si-0" onclick="jumpToStep(0)">
+        <div class="step-circle" id="sc-0">1</div>
+        <div class="step-label">入店・<br>受付</div>
+      </div>
+      <div class="step-item" id="si-1" onclick="jumpToStep(1)">
+        <div class="step-circle" id="sc-1">2</div>
+        <div class="step-label">メンバー<br>待ち</div>
+      </div>
+      <div class="step-item" id="si-2" onclick="jumpToStep(2)">
+        <div class="step-circle" id="sc-2">3</div>
+        <div class="step-label">卓の<br>セット</div>
+      </div>
+      <div class="step-item" id="si-3" onclick="jumpToStep(3)">
+        <div class="step-circle" id="sc-3">4</div>
+        <div class="step-label">対局<br>スタート</div>
+      </div>
+      <div class="step-item" id="si-4" onclick="jumpToStep(4)">
+        <div class="step-circle" id="sc-4">5</div>
+        <div class="step-label">精算</div>
+      </div>
+    </div>
+
+    <!-- Steps container -->
+    <div id="steps-container">
+
+      <!-- Step 0 -->
+      <div class="card" id="card-0">
+        <div class="card-header" onclick="toggleCard(0)">
+          <div class="card-num" id="cn-0">1</div>
+          <div class="card-info">
+            <div class="card-title">入店・受付</div>
+            <div class="card-desc">「フリーで一人です」と伝える。会員証・料金システムを確認。</div>
+          </div>
+          <span class="card-badge" id="cb-0">-</span>
+          <div class="card-toggle" id="ct-0">
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" width="12"><path d="M4 6l4 4 4-4"/></svg>
+          </div>
+        </div>
+        <div class="card-body" id="body-0">
+          <div class="detail-section">
+            <div class="detail-title">入店時に言うフレーズ</div>
+            <div class="phrase-box">
+              <div class="phrase-q">スタッフに話しかけて</div>
+              <div class="phrase-a">「フリーで一人なんですが、入れますか？」</div>
+              <div class="phrase-note">※フリー＝知らない人と卓を囲むこと</div>
+            </div>
+            <div class="phrase-box">
+              <div class="phrase-q">初心者なら正直に伝えると安心</div>
+              <div class="phrase-a">「初めて来たんですが、教えてもらえますか？」</div>
+            </div>
+          </div>
+          <div class="detail-section">
+            <div class="detail-title">確認しておくこと</div>
+            <div class="info-list">
+              <div class="info-item"><span class="info-icon">💳</span><div class="info-text"><b>会員証</b>が必要か（多くの店で無料作成できる）</div></div>
+              <div class="info-item"><span class="info-icon">💴</span><div class="info-text"><b>料金体系</b>：時間制 or セット制。東風戦・半荘いくらか</div></div>
+              <div class="info-item"><span class="info-icon">🚬</span><div class="info-text">喫煙・禁煙の座席があるか</div></div>
+            </div>
+          </div>
+          <button class="complete-btn" id="cbtn-0" onclick="completeStep(0)">✓ このステップを完了する</button>
+        </div>
+      </div>
+
+      <!-- Step 1 -->
+      <div class="card" id="card-1">
+        <div class="card-header" onclick="toggleCard(1)">
+          <div class="card-num" id="cn-1">2</div>
+          <div class="card-info">
+            <div class="card-title">待機・呼ばれるのを待つ</div>
+            <div class="card-desc">メンバーが揃い次第、スタッフに席へ案内してもらう。</div>
+          </div>
+          <span class="card-badge" id="cb-1">-</span>
+          <div class="card-toggle" id="ct-1">
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" width="12"><path d="M4 6l4 4 4-4"/></svg>
+          </div>
+        </div>
+        <div class="card-body" id="body-1">
+          <div class="detail-section">
+            <div class="tip-box">
+              <strong>待ち時間の目安</strong><br>
+              空き席があればすぐ案内。混雑時は5〜20分ほど待つこともあります。
+              ドリンクを注文したり、スマホで役の確認をしておくとよいです。
+            </div>
+            <div class="info-list">
+              <div class="info-item"><span class="info-icon">📋</span><div class="info-text">名前や番号を控えてくれる店もある。呼ばれたらすぐ立てるよう近くにいよう</div></div>
+              <div class="info-item"><span class="info-icon">🤝</span><div class="info-text">卓に案内されたらあいさつ：「よろしくお願いします」</div></div>
+            </div>
+          </div>
+          <div class="branch-box" id="cbtn-1">
+            <div class="branch-label">状況を選んでください</div>
+            <div class="branch-row">
+              <button class="branch-btn branch-wait" onclick="completeStep(1)">
+                <span class="branch-icon">⏳</span>
+                <span class="branch-text">
+                  <b>まだ揃っていない</b>
+                  <small>引き続き待機する</small>
+                </span>
+                <span class="branch-arrow">→ ステップ2完了</span>
+              </button>
+              <button class="branch-btn branch-ready" onclick="skipWait()">
+                <span class="branch-icon">✅</span>
+                <span class="branch-text">
+                  <b>すでに揃っている！</b>
+                  <small>そのまま卓へ案内される</small>
+                </span>
+                <span class="branch-arrow">→ ステップ3へ</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 2 -->
+      <div class="card" id="card-2">
+        <div class="card-header" onclick="toggleCard(2)">
+          <div class="card-num" id="cn-2">3</div>
+          <div class="card-info">
+            <div class="card-title">卓のボタン操作・セット</div>
+            <div class="card-desc">自動卓の操作。牌を洗牌して対戦準備をする。</div>
+          </div>
+          <span class="card-badge" id="cb-2">-</span>
+          <div class="card-toggle" id="ct-2">
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" width="12"><path d="M4 6l4 4 4-4"/></svg>
+          </div>
+        </div>
+        <div class="card-body" id="body-2">
+          <div class="detail-section">
+            <div class="tip-box">
+              <strong>自動卓（全自動麻雀卓）の基本操作</strong><br>
+              牌が自動でセットされる卓が多いです。初回はスタッフが操作してくれるので慌てずOK。
+            </div>
+            <div class="info-list">
+              <div class="info-item"><span class="info-icon">🔴</span><div class="info-text"><b>スタートボタン</b>を押すと牌の洗牌が始まる（全員で押す店もある）</div></div>
+              <div class="info-item"><span class="info-icon">🀄</span><div class="info-text">牌山が自動で上がってきたら、<b>サイコロを振って</b>山を決める</div></div>
+              <div class="info-item"><span class="info-icon">🎯</span><div class="info-text">親が決まったら配牌。自分の前に来た山から<b>13枚</b>取る</div></div>
+              <div class="info-item"><span class="info-icon">❓</span><div class="info-text">わからなければ「初めてなので教えてください」と遠慮なく言おう</div></div>
+            </div>
+          </div>
+          <button class="complete-btn" id="cbtn-2" onclick="completeStep(2)">✓ このステップを完了する</button>
+        </div>
+      </div>
+
+      <!-- Step 3 -->
+      <div class="card" id="card-3">
+        <div class="card-header" onclick="toggleCard(3)">
+          <div class="card-num" id="cn-3">4</div>
+          <div class="card-info">
+            <div class="card-title">対局スタート</div>
+            <div class="card-desc">ツモ・ポン・チー・カンを繰り返してアガリを目指す。</div>
+          </div>
+          <span class="card-badge" id="cb-3">-</span>
+          <div class="card-toggle" id="ct-3">
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" width="12"><path d="M4 6l4 4 4-4"/></svg>
+          </div>
+        </div>
+        <div class="card-body" id="body-3">
+          <div class="detail-section">
+            <div class="info-list">
+              <div class="info-item"><span class="info-icon">🔄</span><div class="info-text"><b>ツモ</b>：山から1枚引いて、不要な牌を1枚捨てる</div></div>
+              <div class="info-item"><span class="info-icon">📣</span><div class="info-text"><b>ポン</b>：他家の捨て牌と自分の同じ牌2枚で鳴く（3枚にする）</div></div>
+              <div class="info-item"><span class="info-icon">📣</span><div class="info-text"><b>チー</b>：左隣（上家）の捨て牌で順子を完成させる</div></div>
+              <div class="info-item"><span class="info-icon">🏆</span><div class="info-text"><b>ロン</b>：他家の捨て牌でアガリ。「ロン！」と声に出して宣言</div></div>
+              <div class="info-item"><span class="info-icon">🏆</span><div class="info-text"><b>ツモアガリ</b>：山から引いた牌でアガリ。「ツモ！」と宣言</div></div>
+            </div>
+          </div>
+          <button class="complete-btn" id="cbtn-3" onclick="completeStep(3)">✓ このステップを完了する</button>
+        </div>
+      </div>
+
+      <!-- Step 4 -->
+      <div class="card" id="card-4">
+        <div class="card-header" onclick="toggleCard(4)">
+          <div class="card-num" id="cn-4">5</div>
+          <div class="card-info">
+            <div class="card-title">精算・退店</div>
+            <div class="card-desc">終局後にスコアを記録し、料金を支払って退店。</div>
+          </div>
+          <span class="card-badge" id="cb-4">-</span>
+          <div class="card-toggle" id="ct-4">
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" width="12"><path d="M4 6l4 4 4-4"/></svg>
+          </div>
+        </div>
+        <div class="card-body" id="body-4">
+          <div class="detail-section">
+            <div class="info-list">
+              <div class="info-item"><span class="info-icon">📊</span><div class="info-text">半荘終了後、スタッフまたは自分たちでスコアを計算</div></div>
+              <div class="info-item"><span class="info-icon">💰</span><div class="info-text">点棒の多い順に順位決定。料金＋順位点（ウマ）を精算</div></div>
+              <div class="info-item"><span class="info-icon">🚪</span><div class="info-text">退店時「ありがとうございました」と一言添えるのがマナー</div></div>
+            </div>
+          </div>
+          <button class="complete-btn" id="cbtn-4" onclick="completeStep(4)">✓ このステップを完了する</button>
+        </div>
+      </div>
+
+    </div><!-- /steps-container -->
+
+    <!-- All done -->
+    <div class="all-done" id="all-done">
+      <div class="all-done-icon">🎉</div>
+      <div class="all-done-title">全ステップ完了！</div>
+      <div class="all-done-sub">
+        はじめての雀荘、おつかれさまでした。<br>
+        次は「対局の流れ」タブで役や鳴きを復習しましょう。
+      </div>
+      <button class="reset-btn" onclick="resetSteps()">最初からやり直す</button>
+    </div>
+
+  </section>
+
+  <!-- =========== 対局の流れ =========== -->
+  <section id="play" class="section">
+    <div class="hero-badge">🀄 ゲームの流れ</div>
+    <h1 class="hero-title">対局の流れを<br>完全解説</h1>
+    <p class="hero-sub">1局ごとの進め方と、覚えておきたい鳴きのタイミング。</p>
+
+    <div class="tips-grid">
+      <div class="tip-card">
+        <div class="tip-card-header">
+          <div class="tip-icon" style="background:#e0e7ff">🎲</div>
+          <div class="tip-card-title">① 起家（親）を決める</div>
+        </div>
+        <div class="tip-card-body">
+          サイコロを振って座席を決定。東家（親）→南家→西家→北家の順。
+          親はアガリ点が<span class="highlight">1.5倍</span>ですが、振り込んだときの支払いも増えます。
+        </div>
+      </div>
+      <div class="tip-card">
+        <div class="tip-card-header">
+          <div class="tip-icon" style="background:#fef3c7">🀄</div>
+          <div class="tip-card-title">② 配牌・手作り</div>
+        </div>
+        <div class="tip-card-body">
+          親13枚・子13枚を配牌。まず<span class="highlight">ターツ（2枚組）</span>を集めて手の方向性を決めましょう。
+          役がない手はアガれないので、まず「タンヤオ」「ピンフ」を狙うのがおすすめ。
+        </div>
+      </div>
+      <div class="tip-card">
+        <div class="tip-card-header">
+          <div class="tip-icon" style="background:#dcfce7">🔄</div>
+          <div class="tip-card-title">③ ツモ・打牌の繰り返し</div>
+        </div>
+        <div class="tip-card-body">
+          親から時計回りにツモ→打牌を繰り返す。
+          <span class="highlight">テンパイ（あと1枚でアガれる状態）</span>になったらリーチ宣言を検討。
+          リーチ棒（1000点棒）を卓の前に出して宣言します。
+        </div>
+      </div>
+      <div class="tip-card">
+        <div class="tip-card-header">
+          <div class="tip-icon" style="background:#fce7f3">📣</div>
+          <div class="tip-card-title">④ 鳴き（ポン・チー・カン）</div>
+        </div>
+        <div class="tip-card-body">
+          <b>ポン</b>：誰の捨て牌でも同じ牌2枚あればOK。<br>
+          <b>チー</b>：左隣（上家）の牌のみ。順子が作れるとき。<br>
+          <b>カン</b>：同じ牌4枚でカン宣言。ドラが増えます。<br>
+          鳴くと<span class="highlight">リーチができなくなる</span>ので注意。
+        </div>
+      </div>
+      <div class="tip-card">
+        <div class="tip-card-header">
+          <div class="tip-icon" style="background:#ede9fe">🏆</div>
+          <div class="tip-card-title">⑤ アガリ</div>
+        </div>
+        <div class="tip-card-body">
+          <b>ロン</b>：他家の打牌でアガリ。打った人が全額払う（包）。<br>
+          <b>ツモ</b>：山からツモってアガリ。3人（または親1人）で分担払い。<br>
+          アガったら牌を開示して役を申告します。<span class="highlight">役なしはアガれません。</span>
+        </div>
+      </div>
+      <div class="tip-card">
+        <div class="tip-card-header">
+          <div class="tip-icon" style="background:#fee2e2">⚠️</div>
+          <div class="tip-card-title">⑥ 流局・チョンボ</div>
+        </div>
+        <div class="tip-card-body">
+          山が無くなったら<span class="highlight">流局</span>。テンパイなら点棒をもらえます（テンパイ料）。<br>
+          <b>チョンボ</b>は誤ったアガリ宣言など。罰符を全員に払います。
+          初心者は焦ってロンを宣言しないよう落ち着いて確認を。
+        </div>
+      </div>
+    </div>
+
+    <!-- 役クイック一覧 -->
+    <div style="margin-top:24px">
+      <div class="phase-label">初心者が狙いやすい役</div>
+      <div class="glossary-grid" style="margin-top:8px">
+        <div class="gloss-card"><div class="gloss-term">タンヤオ</div><div class="gloss-def">2〜8の数牌だけで揃える。断幺九。鳴いてもOKで初心者に最もおすすめ</div></div>
+        <div class="gloss-card"><div class="gloss-term">ピンフ</div><div class="gloss-def">順子4つ＋雀頭。鳴き不可。ツモなら+符なしで点数計算が楽</div></div>
+        <div class="gloss-card"><div class="gloss-term">リーチ</div><div class="gloss-def">テンパイを宣言するだけで役になる。1000点棒を供託</div></div>
+        <div class="gloss-card"><div class="gloss-term">役牌</div><div class="gloss-def">白・発・中・場風・自風の刻子。ポンで簡単に役がつく</div></div>
+        <div class="gloss-card"><div class="gloss-term">一盃口</div><div class="gloss-def">同じ順子2セット。鳴き不可。覚えると手役の幅が広がる</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =========== 精算・退店 =========== -->
+  <section id="checkout" class="section">
+    <div class="hero-badge">💰 精算ガイド</div>
+    <h1 class="hero-title">精算・退店の<br>流れと注意点</h1>
+    <p class="hero-sub">点数計算・料金精算・退店マナーまで。</p>
+
+    <div class="phase-label">精算の手順</div>
+    <div class="tips-grid" style="margin-top:8px;margin-bottom:24px">
+      <div class="tip-card">
+        <div class="tip-card-header"><div class="tip-icon" style="background:#e0e7ff">1️⃣</div><div class="tip-card-title">点数の数え方</div></div>
+        <div class="tip-card-body">
+          終局後、各自の点棒を数えます。開始時は通常<span class="highlight">25,000点</span>（または30,000点）持ち。
+          点棒の種類：100点棒・1,000点棒・5,000点棒・10,000点棒。
+        </div>
+      </div>
+      <div class="tip-card">
+        <div class="tip-card-header"><div class="tip-icon" style="background:#dcfce7">2️⃣</div><div class="tip-card-title">順位点（ウマ）と計算</div></div>
+        <div class="tip-card-body">
+          <span class="highlight">ウマ</span>とは順位に応じたボーナス/ペナルティ。よく使われるのは「5-10」や「10-30」。<br>
+          例（5-10）：1位+10pt、2位+5pt、3位-5pt、4位-10pt。<br>
+          返し点（オカ）：30,000点返しなら持ち点から30,000を引いた差が素点。
+        </div>
+      </div>
+      <div class="tip-card">
+        <div class="tip-card-header"><div class="tip-icon" style="background:#fef3c7">3️⃣</div><div class="tip-card-title">お金の精算</div></div>
+        <div class="tip-card-body">
+          雀荘の卓代（時間制または半荘制）を全員で割ります。
+          さらにウマの勝敗を現金で受け渡しする場合もあります。
+          <span class="highlight">初回は「精算の仕方を教えてください」</span>とスタッフに確認を。
+        </div>
+      </div>
+    </div>
+
+    <div class="phase-label">よくあるQ&A</div>
+    <div style="margin-top:8px;margin-bottom:24px">
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq('faq-0','fchev-0')">
+          <div class="faq-q-text"><span class="faq-q-icon">Q</span>途中で帰りたくなったら？</div>
+          <svg class="faq-chevron" id="fchev-0" viewBox="0 0 16 16" fill="none" stroke="#6b7280" stroke-width="2" width="16"><path d="M4 6l4 4 4-4"/></svg>
+        </div>
+        <div class="faq-a" id="faq-0">半荘の区切りで退席するのがマナーです。「次で上がらせてもらいます」とテーブル全体に一言伝えましょう。急ぎの場合はスタッフに相談すれば代わりのメンバーを呼んでくれることもあります。</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq('faq-1','fchev-1')">
+          <div class="faq-q-text"><span class="faq-q-icon">Q</span>点数計算が全然わからない…</div>
+          <svg class="faq-chevron" id="fchev-1" viewBox="0 0 16 16" fill="none" stroke="#6b7280" stroke-width="2" width="16"><path d="M4 6l4 4 4-4"/></svg>
+        </div>
+        <div class="faq-a" id="faq-1">最初は点数計算を完全に覚える必要はありません。スタッフや他プレイヤーが確認してくれることが多いです。アプリ「麻雀点数計算」などで補助するのも一般的です。</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq('faq-2','fchev-2')">
+          <div class="faq-q-text"><span class="faq-q-icon">Q</span>持ち点が0点以下になったら？</div>
+          <svg class="faq-chevron" id="fchev-2" viewBox="0 0 16 16" fill="none" stroke="#6b7280" stroke-width="2" width="16"><path d="M4 6l4 4 4-4"/></svg>
+        </div>
+        <div class="faq-a" id="faq-2">「飛び（ハコ割れ）」といいます。この時点でゲーム終了になるルールが多いです。飛んだプレイヤーは自動的に最下位（4位）になります。店によって借り点のルールが異なるので確認を。</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq('faq-3','fchev-3')">
+          <div class="faq-q-text"><span class="faq-q-icon">Q</span>チップやご祝儀とは？</div>
+          <svg class="faq-chevron" id="fchev-3" viewBox="0 0 16 16" fill="none" stroke="#6b7280" stroke-width="2" width="16"><path d="M4 6l4 4 4-4"/></svg>
+        </div>
+        <div class="faq-a" id="faq-3">一発・裏ドラ・嶺上開花などで獲得できる追加ボーナスです。1チップ＝100円など店によって金額が決まっています。現金授受が絡むため、初回は「チップありますか？」と確認しましょう。</div>
+      </div>
+    </div>
+
+    <div class="phase-label">用語集（精算編）</div>
+    <div class="glossary-grid" style="margin-top:8px">
+      <div class="gloss-card"><div class="gloss-term">オカ</div><div class="gloss-def">返し点との差分。トップが総取り。25,000点返し・30,000点持ちなら5,000点×4人分のオカが出る</div></div>
+      <div class="gloss-card"><div class="gloss-term">ウマ</div><div class="gloss-def">順位ボーナス。1位・2位はプラス、3位・4位はマイナス。「5-10」「10-30」などが一般的</div></div>
+      <div class="gloss-card"><div class="gloss-term">飛び</div><div class="gloss-def">持ち点が0点以下になること（ハコ割れ）。その時点で最下位確定</div></div>
+      <div class="gloss-card"><div class="gloss-term">チップ</div><div class="gloss-def">一発・裏ドラ・嶺上などで発生する追加ボーナス。現金換算する店が多い</div></div>
+      <div class="gloss-card"><div class="gloss-term">卓代</div><div class="gloss-def">雀荘への支払い。時間制（1時間○円）またはセット制（半荘1回○円）</div></div>
+    </div>
+  </section>
+
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script>
+  const TOTAL = 5;
+  // state: array of 'upcoming' | 'current' | 'done'
+  let states = ['current','upcoming','upcoming','upcoming','upcoming'];
+
+  function save() { localStorage.setItem('mjStates', JSON.stringify(states)); }
+  function load() {
+    const s = localStorage.getItem('mjStates');
+    if (s) { try { states = JSON.parse(s); } catch(e) {} }
+  }
+
+  function render() {
+    const doneCount = states.filter(s => s === 'done').length;
+    // progress
+    document.getElementById('progress-fill').style.width = (doneCount / TOTAL * 100) + '%';
+    document.getElementById('progress-text').textContent = doneCount + ' / ' + TOTAL + ' 完了';
+
+    for (let i = 0; i < TOTAL; i++) {
+      const st = states[i];
+      const card = document.getElementById('card-' + i);
+      const si = document.getElementById('si-' + i);
+      const sc = document.getElementById('sc-' + i);
+      const cn = document.getElementById('cn-' + i);
+      const cb = document.getElementById('cb-' + i);
+      const cbtn = document.getElementById('cbtn-' + i);
+
+      // card classes
+      card.classList.remove('current-step','done-step');
+      if (st === 'current') card.classList.add('current-step');
+      if (st === 'done') card.classList.add('done-step');
+
+      // stepper
+      si.classList.remove('done','current');
+      if (st === 'done') si.classList.add('done');
+      if (st === 'current') si.classList.add('current');
+      sc.innerHTML = st === 'done'
+        ? (i+1) + '<span class="step-check">✓</span>'
+        : (i + 1);
+
+      // card num
+      cn.innerHTML = st === 'done'
+        ? (i+1) + '<span style="font-size:9px;margin-left:1px">✓</span>'
+        : (i + 1);
+
+      // badge
+      cb.className = 'card-badge';
+      if (st === 'done') { cb.classList.add('badge-done'); cb.textContent = '完了'; }
+      else if (st === 'current') { cb.classList.add('badge-current'); cb.textContent = '進行中'; }
+      else { cb.classList.add('badge-upcoming'); cb.textContent = i === TOTAL-1 ? '後で' : '次へ'; }
+
+      // complete button / branch box
+      if (cbtn) cbtn.style.display = st === 'current' ? (cbtn.classList.contains('branch-box') ? 'block' : 'flex') : 'none';
+    }
+
+    // auto open current step
+    const curIdx = states.indexOf('current');
+    if (curIdx >= 0) {
+      const body = document.getElementById('body-' + curIdx);
+      const ct = document.getElementById('ct-' + curIdx);
+      if (!body.classList.contains('open')) {
+        body.classList.add('open');
+        ct.classList.add('open');
+      }
+    }
+
+    // all done
+    const allDone = doneCount === TOTAL;
+    document.getElementById('all-done').classList.toggle('show', allDone);
+    document.getElementById('steps-container').style.display = allDone ? 'none' : 'block';
+  }
+
+  function completeStep(idx) {
+    if (states[idx] !== 'current') return;
+    states[idx] = 'done';
+    // close current card body
+    document.getElementById('body-' + idx).classList.remove('open');
+    document.getElementById('ct-' + idx).classList.remove('open');
+
+    if (idx + 1 < TOTAL) {
+      states[idx + 1] = 'current';
+    }
+    save();
+    render();
+    showToast('ステップ ' + (idx + 1) + ' 完了！');
+    if (idx + 1 < TOTAL) {
+      setTimeout(() => {
+        document.getElementById('card-' + (idx+1)).scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 200);
+    }
+  }
+
+  function skipWait() {
+    // mark step 1 (待機) as done, step 2 (卓セット) as current
+    states[1] = 'done';
+    states[2] = 'current';
+    document.getElementById('body-1').classList.remove('open');
+    document.getElementById('ct-1').classList.remove('open');
+    save();
+    render();
+    showToast('メンバー揃い！ステップ3へ進みます');
+    setTimeout(() => {
+      document.getElementById('card-2').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 200);
+  }
+
+  function resetSteps() {
+    states = ['current','upcoming','upcoming','upcoming','upcoming'];
+    save();
+    render();
+  }
+
+  function toggleCard(idx) {
+    const body = document.getElementById('body-' + idx);
+    const ct = document.getElementById('ct-' + idx);
+    body.classList.toggle('open');
+    ct.classList.toggle('open');
+  }
+
+  function jumpToStep(idx) {
+    if (!document.getElementById('body-' + idx).classList.contains('open')) {
+      toggleCard(idx);
+    }
+    document.getElementById('card-' + idx).scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  function toggleFaq(aId, cId) {
+    document.getElementById(aId).classList.toggle('open');
+    document.getElementById(cId).classList.toggle('open');
+  }
+
+  function showSection(id) {
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    document.querySelectorAll('.tab-btn').forEach((b, i) => {
+      b.classList.toggle('active', ['flow','play','checkout'][i] === id);
+    });
+  }
+
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 2200);
+  }
+
+  // init
+  load();
+  render();
+</script>
+</body>
+</html>
