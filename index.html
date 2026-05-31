@@ -385,11 +385,49 @@
       .rules-panel { display: none !important; }
     }
 
-    /* Checkable rule items */
+    /* Checkable rule items (legacy, kept for compat) */
     .info-item.checkable { cursor: pointer; user-select: none; border-radius: 8px; }
-    .info-item.checkable:hover { background: #f5f7ff; }
-    .info-item.checked { background: #eef2ff !important; padding-left: 7px; border-left: 3px solid #6366f1; }
-    .rule-cb { flex-shrink: 0; width: 15px; height: 15px; accent-color: #6366f1; pointer-events: none; margin-top: 2px; }
+    .rule-cb { display: none; }
+
+    /* ===== RULE CARDS (step 2 new UI) ===== */
+    .rule-section-hdr {
+      font-size: 13px; font-weight: 800; color: #1a1a2e;
+      padding: 16px 0 8px; border-bottom: 2px solid #e5e7eb; margin-bottom: 12px;
+      display: flex; align-items: center;
+    }
+    .rule-card {
+      background: #fff; border: 1.5px solid #e5e7eb;
+      border-radius: 12px; margin-bottom: 10px; overflow: hidden;
+    }
+    .rule-card-title {
+      font-size: 13px; font-weight: 700; color: #1a1a2e;
+      padding: 11px 14px; background: #f9fafb; border-bottom: 1px solid #f0f0f0;
+    }
+    .rule-card-body { padding: 12px 14px; }
+    .rule-sub-title { font-size: 12px; font-weight: 700; color: #374151; margin-bottom: 6px; }
+    .rule-para { font-size: 12px; color: #4b5563; line-height: 1.6; margin-bottom: 8px; }
+    .rule-note { font-size: 11px; color: #6b7280; margin-top: 6px; line-height: 1.7; }
+
+    /* Option buttons */
+    .rule-opts { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 4px; }
+    .ropt-btn {
+      font-size: 12px; padding: 6px 13px; border-radius: 20px;
+      border: 1.5px solid #d1d5db; background: #fff; cursor: pointer;
+      color: #374151; transition: all .15s; line-height: 1.3; white-space: nowrap;
+    }
+    .ropt-btn:hover { border-color: #6366f1; background: #eef2ff; color: #4338ca; }
+    .ropt-btn.selected { background: #6366f1; border-color: #6366f1; color: #fff; font-weight: 700; }
+
+    /* Legacy (historical) warning box */
+    .legacy-box {
+      background: #fffbeb; border: 1.5px solid #f59e0b;
+      border-radius: 10px; padding: 10px 14px; margin: 8px 0;
+      font-size: 12px; color: #92400e; line-height: 1.6;
+    }
+    .legacy-hdr {
+      font-weight: 700; color: #b45309; margin-bottom: 5px; font-size: 11px;
+      display: flex; align-items: center; gap: 4px;
+    }
 
     /* Revert button */
     .revert-btn {
@@ -804,83 +842,233 @@
         title: 'ルール設定・着卓',
         desc: '全員揃ったらスタッフを呼んでルールを設定する。仲間内で事前に決めておこう。',
         body: `
-          <div class="detail-section">
-            <div class="tip-box"><strong>ルール設定はスタッフに頼もう</strong><br>卓についたらスタッフを呼んで「ルール設定お願いします」と声をかける。設定が終わればそのまま開始できる。<br>仲間内のローカルルールは<b>全員で事前に口頭確認</b>しておくとトラブルが少ない。</div>
-            <div class="tip-box" style="background:#f0fdf4;border-color:#bbf7d0;color:#166534"><strong>📋 採用するルールをチェック</strong><br>各項目をタップするとチェックでき、画面右側（スマホは下のボタン）でいつでも確認できます。</div>
-          </div>
+          <div class="tip-box" style="background:#f0fdf4;border-color:#bbf7d0;color:#166534;margin-bottom:12px"><strong>📋 採用するルールをボタンで選択</strong><br>各ボタンをタップして選択すると、画面右側（スマホは下のボタン）でいつでも一覧確認できます。</div>
 
-          <div class="detail-section">
-            <div class="detail-title">① 基本設定（スタッフに伝える）</div>
-            <div class="info-list">
-              <div class="info-item checkable" id="ri-yonma" onclick="toggleRule('yonma','ヨンマ/サンマ')"><input type="checkbox" id="cb-yonma" class="rule-cb"><span class="info-icon">👥</span><div class="info-text"><b>ヨンマ or サンマ</b>：4人打ち（ヨンマ）か3人打ち（サンマ）か。関東はヨンマが多い</div></div>
-              <div class="info-item checkable" id="ri-kyoku" onclick="toggleRule('kyoku','局数（東風/半荘）')"><input type="checkbox" id="cb-kyoku" class="rule-cb"><span class="info-icon">🔄</span><div class="info-text"><b>東風戦 or 半荘</b>：東風戦は東場4局のみ（約30〜40分）。半荘は東南場の8局（約60〜90分）。時間が少ないなら東風戦</div></div>
-              <div class="info-item checkable" id="ri-mochiten" onclick="toggleRule('mochiten','持ち点・返し点')"><input type="checkbox" id="cb-mochiten" class="rule-cb"><span class="info-icon">💯</span><div class="info-text"><b>持ち点・返し点</b>：一般的は「25,000点持ち・30,000点返し」。30,000点持ちの店もある。差分がオカ（トップ総取り）になる</div></div>
-              <div class="info-item"><span class="info-icon">🎓</span><div class="info-text"><b>学割</b>：学生証提示で料金が半額になる店が多い</div></div>
-              <div class="info-item"><span class="info-icon">⏱️</span><div class="info-text">打つ時間の目安を伝えておくとスムーズ（「2〜3時間くらい」など）</div></div>
-            </div>
-          </div>
+          <div class="rule-section-hdr">基本ルール</div>
 
-          <div class="detail-section">
-            <div class="detail-title">② ドラ関連（仲間内で決める）</div>
-            <div class="info-list">
-              <div class="info-item checkable" id="ri-akadora" onclick="toggleRule('akadora','赤ドラ枚数')"><input type="checkbox" id="cb-akadora" class="rule-cb"><span class="info-icon">🀄</span><div class="info-text"><b>赤ドラ</b>：なし・各色1枚（5m/5p/5s）・各色2枚から選ぶ。枚数が増えるほど点数が荒れやすい</div></div>
-              <div class="info-item checkable" id="ri-urador" onclick="toggleRule('urador','裏ドラ')"><input type="checkbox" id="cb-urador" class="rule-cb"><span class="info-icon">🃏</span><div class="info-text"><b>裏ドラ</b>：リーチ和了時に表示。あり/なし。なしにすると点数がおとなしくなる</div></div>
-              <div class="info-item checkable" id="ri-kandora" onclick="toggleRule('kandora','カンドラ/槓裏')"><input type="checkbox" id="cb-kandora" class="rule-cb"><span class="info-icon">➕</span><div class="info-text"><b>カンドラ・槓裏ドラ</b>：カンするたびにドラが増える。槓裏はリーチ時のカンにさらに裏ドラが付く</div></div>
-              <div class="info-item checkable" id="ri-hana" onclick="toggleRule('hana','花牌')"><input type="checkbox" id="cb-hana" class="rule-cb"><span class="info-icon">🌸</span><div class="info-text"><b>花牌（はなぱい）</b>：一部の自動卓に入っている特殊牌。得点ボーナスになるローカルルール。店のデフォルト設定に従うことが多い</div></div>
-              <div class="info-item checkable" id="ri-kita" onclick="toggleRule('kita','北抜き（サンマ）')"><input type="checkbox" id="cb-kita" class="rule-cb"><span class="info-icon">⬆️</span><div class="info-text"><b>北抜き（サンマのみ）</b>：サンマでは北を抜きドラとして使うルールが多い。あり/なしを確認</div></div>
+          <div class="rule-card">
+            <div class="rule-card-title">📊 ウマ・オカ（順位点）</div>
+            <div class="rule-card-body">
+              <div class="rule-para"><b>ウマ</b>：半荘終了時の着順に応じてポイントをやり取りする仕組み。4位→1位、3位→2位の順で渡します。</div>
+              <div class="rule-para" style="margin-bottom:4px"><b>ゴットー</b>：ウマが「+20/+10」の取り決め（1着+20P・2着+10P・3着−10P・4着−20P）。</div>
+              <div class="legacy-box"><div class="legacy-hdr">📜 昔はこういうのがあったようですが現在は賭博罪に該当する可能性あり</div>テンゴでは500円・1000円の授受になることからこの名がつきました（「ゴ」=500円、「トー」=1000円）。</div>
+              <div class="rule-para" style="margin-bottom:4px"><b>ワンスリー</b>：ウマが「+30/+10」の取り決め（1着+30P・2着+10P・3着−10P・4着−30P）。</div>
+              <div class="legacy-box"><div class="legacy-hdr">📜 昔はこういうのがあったようですが現在は賭博罪に該当する可能性あり</div>テンピンでは1000円・3000円の授受になります。</div>
+              <div class="legacy-box"><div class="legacy-hdr">📜 昔はこういうのがあったようですが現在は賭博罪に該当する可能性あり</div>※どちらもウマの呼称であり、レートとは独立しています。テンゴでワンスリー、テンピンでゴットーという組み合わせも存在していたようです。</div>
+              <div class="rule-para"><b>オカ</b>：配給原点と返し点の差額をもとに、順位計算時にトップへ加算されるトップ賞。25000点持ち・30000点返しではトップへ20,000点相当（オカ20）が加算され、30000点持ち・30000点返しではオカなしになります。精算は「素点 → 返し点計算 → ウマ・オカ加算」です。</div>
             </div>
           </div>
 
-          <div class="detail-section">
-            <div class="detail-title">③ 役・進行ルール（仲間内で決める）</div>
-            <div class="info-list">
-              <div class="info-item checkable" id="ri-kuitain" onclick="toggleRule('kuitain','喰いタン（後付け）')"><input type="checkbox" id="cb-kuitain" class="rule-cb"><span class="info-icon">🍜</span><div class="info-text"><b>喰いタン（後付け）</b>：鳴いてタンヤオのみでアガれるか。「あり」が一般的だが「なし」にすると手役重視になる</div></div>
-              <div class="info-item checkable" id="ri-ippatsu" onclick="toggleRule('ippatsu','一発')"><input type="checkbox" id="cb-ippatsu" class="rule-cb"><span class="info-icon">⚡</span><div class="info-text"><b>一発</b>：リーチ後1順以内の和了に+1翻。あり/なし</div></div>
-              <div class="info-item checkable" id="ri-rkan" onclick="toggleRule('rkan','リーチ後暗カン')"><input type="checkbox" id="cb-rkan" class="rule-cb"><span class="info-icon">🔂</span><div class="info-text"><b>リーチ後の暗カン</b>：テンパイの形が変わらない場合のみ許可が一般的。「完全禁止」にする仲間内もいる</div></div>
-              <div class="info-item checkable" id="ri-nagashi" onclick="toggleRule('nagashi','流し満貫')"><input type="checkbox" id="cb-nagashi" class="rule-cb"><span class="info-icon">🌊</span><div class="info-text"><b>流し満貫</b>：自分の捨て牌が全て端牌・字牌で流局した場合に満貫点を得るルール。あり/なし</div></div>
-              <div class="info-item checkable" id="ri-driichi" onclick="toggleRule('driichi','ダブルリーチ')"><input type="checkbox" id="cb-driichi" class="rule-cb"><span class="info-icon">🃏</span><div class="info-text"><b>ダブルリーチ</b>：第1打でテンパイしてのリーチに+1翻。あり/なし</div></div>
-              <div class="info-item checkable" id="ri-dyakuman" onclick="toggleRule('dyakuman','ダブル/トリプル役満')"><input type="checkbox" id="cb-dyakuman" class="rule-cb"><span class="info-icon">🏆</span><div class="info-text"><b>ダブル役満・トリプル役満</b>：大三元＋字一色など複合役満を2倍・3倍にするか。なしにすると最大1役満（32,000点）まで</div></div>
-              <div class="info-item checkable" id="ri-tochuryu" onclick="toggleRule('tochuryu','途中流局')"><input type="checkbox" id="cb-tochuryu" class="rule-cb"><span class="info-icon">🛑</span><div class="info-text"><b>途中流局</b>：九種九牌（配牌で么九牌9種以上）・四風子連打・四家リーチ・四カン流れなどの途中流局をどうするか</div></div>
-              <div class="info-item checkable" id="ri-pao" onclick="toggleRule('pao','パオ（責任払い）')"><input type="checkbox" id="cb-pao" class="rule-cb"><span class="info-icon">💥</span><div class="info-text"><b>パオ（責任払い）</b>：大三元・大四喜・字一色の確定牌を鳴かせた人が放銃分を責任払いするルール。あり/なし</div></div>
-              <div class="info-item checkable" id="ri-aozora" onclick="toggleRule('aozora','青天井')"><input type="checkbox" id="cb-aozora" class="rule-cb"><span class="info-icon">🔵</span><div class="info-text"><b>青天井</b>：点数の上限をなくして符・翻数通りに計算するルール。通常は満貫以上に打ち止めがあるが、青天井は役満を超えた計算も有効になる</div></div>
+          <div class="rule-section-hdr" style="margin-top:16px">選択ルール<span style="font-size:11px;font-weight:400;color:#6b7280;margin-left:8px">入店時・着席前に確認する取り決めです</span></div>
+
+          <div class="rule-card">
+            <div class="rule-card-title">🔢 持ち点・返し点</div>
+            <div class="rule-card-body">
+              <div class="rule-opts">
+                <button class="ropt-btn" data-rule="mochiten" data-val="25000-30000" onclick="selectOpt('mochiten','持ち点・返し点','25000点持ち30000点返し')">25000点持ち・30000点返し</button>
+                <button class="ropt-btn" data-rule="mochiten" data-val="30000-30000" onclick="selectOpt('mochiten','持ち点・返し点','30000点持ち30000点返し')">30000点持ち・30000点返し</button>
+              </div>
+              <div class="rule-note">※返し点は半荘終了時の基準点。25000点持ち・30000点返しなら差額5000点×4人分（オカ20）がトップに加算。30000点持ち・30000点返しはオカなし。</div>
             </div>
           </div>
 
-          <div class="detail-section">
-            <div class="detail-title">④ 精算ルール（仲間内で決める）</div>
-            <div class="info-list">
-              <div class="info-item checkable" id="ri-uma" onclick="toggleRule('uma','ウマ設定')"><input type="checkbox" id="cb-uma" class="rule-cb"><span class="info-icon">📊</span><div class="info-text"><b>ウマ</b>：順位によるボーナス/ペナルティ。よく使われるのは「5-10」（1位+10pt、2位+5pt、3位-5pt、4位-10pt）や「10-30」（より差が大きい）</div></div>
-              <div class="info-item checkable" id="ri-oka" onclick="toggleRule('oka','オカ（返し点）')"><input type="checkbox" id="cb-oka" class="rule-cb"><span class="info-icon">🎁</span><div class="info-text"><b>オカ</b>：25,000点持ち・30,000点返しなら差の5,000点×4人分（計20,000点）がオカとしてトップに入る。返し点の設定次第で変わる</div></div>
-              <div class="info-item checkable" id="ri-tobi" onclick="toggleRule('tobi','飛び賞')"><input type="checkbox" id="cb-tobi" class="rule-cb"><span class="info-icon">🏅</span><div class="info-text"><b>飛び賞（とびしょう）</b>：持ち点が0点以下になった（ハコ割れ）プレイヤーから一定点を受け取るルール。「あり（5pt）」「なし」など</div></div>
-              <div class="info-item checkable" id="ri-chip" onclick="toggleRule('chip','チップ（ご祝儀）')"><input type="checkbox" id="cb-chip" class="rule-cb"><span class="info-icon">🎰</span><div class="info-text"><b>チップ（ご祝儀）</b>：一発・裏ドラ・嶺上開花・役満などで獲得できるボーナス。1枚いくらかを決める。なしにするとシンプルになる</div></div>
-              <div class="info-item checkable" id="ri-tsumibo" onclick="toggleRule('tsumibo','積み棒の点数')"><input type="checkbox" id="cb-tsumibo" class="rule-cb"><span class="info-icon">📏</span><div class="info-text"><b>積み棒の点数</b>：通常1本=300点（ツモ100点×3人 or 放銃者300点）。仲間内によっては「1本600点」などに変えるケースも</div></div>
+          <div class="rule-card">
+            <div class="rule-card-title">🔢 レート・費用</div>
+            <div class="rule-card-body">
+              <div class="legacy-box"><div class="legacy-hdr">📜 昔はこういうのがあったようですが現在は賭博罪に該当する可能性あり</div><b>レート</b>：1000点あたりの金額。テンサン（30円）・テンゴ（50円）・テンピン（100円）</div>
+              <div class="rule-para"><b>場代（ゲーム代）</b>：半荘ごとに店へ支払う利用料金。</div>
+              <div class="legacy-box"><div class="legacy-hdr">📜 昔はこういうのがあったようですが現在は賭博罪に該当する可能性あり</div><b>預かり金</b>：入店時に負け逃げ防止として店に預ける保証金。テンゴなら1,000〜3,000円、テンピンなら3,000〜5,000円が相場。精算時に返金または差し引きされます。</div>
             </div>
           </div>
 
-          <div class="detail-section">
-            <div class="detail-title">⑤ レート（点数を現金換算する場合）</div>
-            <div class="tip-box" style="background:#fff7ed;border-color:#fed7aa;color:#7c2d12">
-              <strong>⚠️ 現金を賭けることは賭博罪にあたる可能性があります</strong><br>
-              以下は仲間内で耳にするレート用語の解説です。実際に現金精算を行う場合は法律上のリスクを理解した上で自己責任で判断してください。
-            </div>
-            <div class="info-list">
-              <div class="info-item"><span class="info-icon">💴</span><div class="info-text"><b>テンゴ（点五）</b>：1000点＝500円換算のレート。「5」とも呼ばれる。フリー雀荘でも見かける水準</div></div>
-              <div class="info-item"><span class="info-icon">💴</span><div class="info-text"><b>テンピン（点一/ピン）</b>：1000点＝1000円換算。フリー雀荘の標準的なレートのひとつ</div></div>
-              <div class="info-item"><span class="info-icon">💴</span><div class="info-text"><b>点三（テンサン）</b>：1000点＝300円換算。入門者向けの低レート</div></div>
-              <div class="info-item"><span class="info-icon">📜</span><div class="info-text" style="color:#9a3412">
-                <b>※昔はこういうのがあったようです</b>：「天ゴ（てんご）」と呼ばれる高レート（1点＝10円以上など）は、フリー雀荘黎明期に仲間内で行われていたとされる用語で、現在は明確に賭博罪の対象となり得ます。現代の雀荘では使われない表現です
-              </div></div>
+          <div class="rule-card">
+            <div class="rule-card-title">🎫 祝儀・赤牌</div>
+            <div class="rule-card-body">
+              <div class="rule-sub-title">祝儀（チップ）の扱い</div>
+              <div class="rule-para">赤ドラ・一発・裏ドラ・役満などのアガリで発生するチップ。</div>
+              <div class="rule-opts">
+                <button class="ropt-btn" data-rule="chiji" data-val="naki-red-ok" onclick="selectOpt('chiji','祝儀','鳴き赤も祝儀あり')">鳴き赤も祝儀あり</button>
+                <button class="ropt-btn" data-rule="chiji" data-val="menzen-only" onclick="selectOpt('chiji','祝儀','門前赤のみ祝儀あり')">門前赤のみ祝儀あり</button>
+                <button class="ropt-btn" data-rule="chiji" data-val="no-chiji" onclick="selectOpt('chiji','祝儀','赤はドラだが祝儀なし')">赤はドラだが祝儀なし</button>
+              </div>
+              <div class="rule-sub-title" style="margin-top:10px">赤牌の枚数</div>
+              <div class="rule-opts">
+                <button class="ropt-btn" data-rule="aka_mai" data-val="3" onclick="selectOpt('aka_mai','赤牌枚数','赤3枚')">赤3枚</button>
+                <button class="ropt-btn" data-rule="aka_mai" data-val="4" onclick="selectOpt('aka_mai','赤牌枚数','赤4枚')">赤4枚</button>
+                <button class="ropt-btn" data-rule="aka_mai" data-val="5" onclick="selectOpt('aka_mai','赤牌枚数','赤5枚')">赤5枚</button>
+                <button class="ropt-btn" data-rule="aka_mai" data-val="0" onclick="selectOpt('aka_mai','赤牌枚数','赤なし')">赤なし</button>
+              </div>
             </div>
           </div>
 
-          <div class="detail-section">
-            <div class="detail-title">⑥ 卓の操作</div>
-            <div class="info-list">
-              <div class="info-item"><span class="info-icon">🔴</span><div class="info-text"><b>スタートボタン</b>で洗牌開始。スタッフがやってくれることも多い</div></div>
-              <div class="info-item"><span class="info-icon">🀄</span><div class="info-text">牌山が上がったらサイコロを振って山・親を決める</div></div>
-              <div class="info-item"><span class="info-icon">🎯</span><div class="info-text">配牌は13枚。自分の前の山から順番に取る</div></div>
+          <div class="rule-card">
+            <div class="rule-card-title">🀄 アガリ・鳴きに関するルール</div>
+            <div class="rule-card-body">
+              <div class="rule-sub-title">喰い替え</div>
+              <div class="rule-para">鳴いたメンツと同じ牌を捨てる行為の扱い。</div>
+              <div class="rule-opts">
+                <button class="ropt-btn" data-rule="kuikae" data-val="all-ok" onclick="selectOpt('kuikae','喰い替え','全部OK')">全部OK</button>
+                <button class="ropt-btn" data-rule="kuikae" data-val="suji-ok" onclick="selectOpt('kuikae','喰い替え','筋喰い替えのみOK')">筋喰い替えのみOK</button>
+                <button class="ropt-btn" data-rule="kuikae" data-val="ban" onclick="selectOpt('kuikae','喰い替え','完全禁止')">完全禁止</button>
+              </div>
+              <div class="rule-sub-title" style="margin-top:10px">流し満貫</div>
+              <div class="rule-para">自分の捨て牌が終局まですべて么九牌で、誰にも鳴かれていない場合に満貫となる。</div>
+              <div class="rule-opts">
+                <button class="ropt-btn" data-rule="nagashi" data-val="yes" onclick="selectOpt('nagashi','流し満貫','あり')">あり（yes）</button>
+                <button class="ropt-btn" data-rule="nagashi" data-val="no" onclick="selectOpt('nagashi','流し満貫','なし')">なし（no）</button>
+              </div>
+              <div class="rule-sub-title" style="margin-top:10px">包（パオ）</div>
+              <div class="rule-para">大三元・大四喜など役満完成を手伝ったプレイヤーが支払いを一部または全部負担する。</div>
+              <div class="rule-opts">
+                <button class="ropt-btn" data-rule="pao" data-val="yes" onclick="selectOpt('pao','包（パオ）','あり')">あり（yes）</button>
+                <button class="ropt-btn" data-rule="pao" data-val="no" onclick="selectOpt('pao','包（パオ）','なし')">なし（no）</button>
+              </div>
+              <div class="rule-sub-title" style="margin-top:10px">一発消し</div>
+              <div class="rule-para">誰かが鳴いた場合に全員の一発が消える。</div>
+              <div class="rule-opts">
+                <button class="ropt-btn" data-rule="ippatsu_keshi" data-val="yes" onclick="selectOpt('ippatsu_keshi','一発消し','あり')">あり（yes）</button>
+                <button class="ropt-btn" data-rule="ippatsu_keshi" data-val="no" onclick="selectOpt('ippatsu_keshi','一発消し','なし')">なし（no）</button>
+              </div>
+              <div class="rule-sub-title" style="margin-top:10px">オープンリーチ</div>
+              <div class="rule-para">手配を見せてリーチすることでリーチが2翻になる。</div>
+              <div class="rule-opts">
+                <button class="ropt-btn" data-rule="open_riichi" data-val="yes" onclick="selectOpt('open_riichi','オープンリーチ','あり')">あり（yes）</button>
+                <button class="ropt-btn" data-rule="open_riichi" data-val="no" onclick="selectOpt('open_riichi','オープンリーチ','なし')">なし（no）</button>
+              </div>
+              <div class="rule-sub-title" style="margin-top:10px">人和（レンホー）</div>
+              <div class="rule-para">子が第1ツモ前にロンアガリする役。</div>
+              <div class="rule-opts">
+                <button class="ropt-btn" data-rule="renhou" data-val="yes" onclick="selectOpt('renhou','人和（レンホー）','あり')">あり（yes）</button>
+                <button class="ropt-btn" data-rule="renhou" data-val="no" onclick="selectOpt('renhou','人和（レンホー）','なし')">なし（no）</button>
+              </div>
             </div>
-          </div>`
+          </div>
+
+          <div class="rule-card">
+            <div class="rule-card-title">🔀 ロン・和了に関するルール</div>
+            <div class="rule-card-body">
+              <div class="rule-sub-title">ダブロン・頭ハネ</div>
+              <div class="rule-para">1枚の捨て牌に2人が同時ロン可能かどうか。</div>
+              <div class="rule-opts">
+                <button class="ropt-btn" data-rule="double_ron" data-val="triron" onclick="selectOpt('double_ron','ダブロン・頭ハネ','トリロンあり（3人同時）')">トリロンあり（3人同時）</button>
+                <button class="ropt-btn" data-rule="double_ron" data-val="double" onclick="selectOpt('double_ron','ダブロン・頭ハネ','ダブロンあり（全員アガリ）')">ダブロンあり（全員アガリ）</button>
+                <button class="ropt-btn" data-rule="double_ron" data-val="atama" onclick="selectOpt('double_ron','ダブロン・頭ハネ','頭ハネあり')">頭ハネあり</button>
+                <button class="ropt-btn" data-rule="double_ron" data-val="ban" onclick="selectOpt('double_ron','ダブロン・頭ハネ','完全禁止')">完全禁止</button>
+              </div>
+              <div class="rule-sub-title" style="margin-top:10px">アガリ止め</div>
+              <div class="rule-para">オーラスでトップがアガった時点で終了するか、続行可能か。</div>
+              <div class="rule-opts">
+                <button class="ropt-btn" data-rule="agari_dome" data-val="continue" onclick="selectOpt('agari_dome','アガリ止め','続行')">続行</button>
+                <button class="ropt-btn" data-rule="agari_dome" data-val="stop" onclick="selectOpt('agari_dome','アガリ止め','終了')">終了</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="rule-card">
+            <div class="rule-card-title">🔄 流局・連荘に関するルール</div>
+            <div class="rule-card-body">
+              <div class="rule-sub-title">途中流局の採用範囲（複数選択可）</div>
+              <div class="rule-opts">
+                <button class="ropt-btn" data-optid="tochuryu-kyuushu" onclick="toggleOpt('tochuryu-kyuushu','途中流局：九種九牌')">九種九牌</button>
+                <button class="ropt-btn" data-optid="tochuryu-suufuu" onclick="toggleOpt('tochuryu-suufuu','途中流局：四風連打')">四風連打</button>
+                <button class="ropt-btn" data-optid="tochuryu-suucha" onclick="toggleOpt('tochuryu-suucha','途中流局：四家立直')">四家立直</button>
+                <button class="ropt-btn" data-optid="tochuryu-suukan" onclick="toggleOpt('tochuryu-suukan','途中流局：四槓散了')">四槓散了</button>
+                <button class="ropt-btn" data-optid="tochuryu-nashi" onclick="toggleOpt('tochuryu-nashi','途中流局：なし')">なし</button>
+              </div>
+              <div class="rule-note"><b>九種九牌</b>：配牌時点で么九牌が9種以上あるとき流局宣言可 ／ <b>四風連打</b>：1巡目に全員が同じ風牌を捨てた場合 ／ <b>四家立直</b>：4人全員がリーチ ／ <b>四槓散了</b>：4槓成立で流局（1人が4つカンなら続行）</div>
+              <div class="rule-sub-title" style="margin-top:10px">ノーテン罰符</div>
+              <div class="rule-para">流局時の罰符。一般的には3000点。</div>
+              <div class="rule-opts">
+                <button class="ropt-btn" data-rule="noten" data-val="ari" onclick="selectOpt('noten','ノーテン罰符','罰符あり')">罰符あり</button>
+                <button class="ropt-btn" data-rule="noten" data-val="nashi" onclick="selectOpt('noten','ノーテン罰符','罰符なし')">罰符なし</button>
+                <button class="ropt-btn" data-rule="noten" data-val="kyotaku" onclick="selectOpt('noten','ノーテン罰符','供託扱いのみ')">供託扱いのみ</button>
+              </div>
+              <div class="rule-sub-title" style="margin-top:10px">形式テンパイ</div>
+              <div class="rule-para">実際に和了できない形でも、テンパイ形なら流局時のテンパイと認めるか。</div>
+              <div class="rule-opts">
+                <button class="ropt-btn" data-rule="keishiki" data-val="yes" onclick="selectOpt('keishiki','形式テンパイ','あり')">あり（yes）</button>
+                <button class="ropt-btn" data-rule="keishiki" data-val="no" onclick="selectOpt('keishiki','形式テンパイ','なし')">なし（no）</button>
+              </div>
+              <div class="rule-sub-title" style="margin-top:10px">聴牌止め</div>
+              <div class="rule-para">オーラスの親がテンパイで連荘を選ぶか、終了を選べるか。</div>
+              <div class="rule-opts">
+                <button class="ropt-btn" data-rule="tenpai_dome" data-val="renchan" onclick="selectOpt('tenpai_dome','聴牌止め','連荘')">連荘</button>
+                <button class="ropt-btn" data-rule="tenpai_dome" data-val="owari" onclick="selectOpt('tenpai_dome','聴牌止め','終了')">終了</button>
+              </div>
+              <div class="rule-sub-title" style="margin-top:10px">西入・北入</div>
+              <div class="rule-para">南4局終了時に西場へ延長する条件。</div>
+              <div class="rule-opts">
+                <button class="ropt-btn" data-rule="seiri" data-val="none" onclick="selectOpt('seiri','西入・北入','延長しない')">延長しない</button>
+                <button class="ropt-btn" data-rule="seiri" data-val="extend" onclick="selectOpt('seiri','西入・北入','トップが返し点未達なら延長')">トップが返し点未達なら延長</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="rule-card">
+            <div class="rule-card-title">💥 点数・精算に関するルール</div>
+            <div class="rule-card-body">
+              <div class="rule-sub-title">飛び終了</div>
+              <div class="rule-para">持ち点がマイナスになった時の扱い。</div>
+              <div class="rule-opts">
+                <button class="ropt-btn" data-rule="tobi" data-val="ari" onclick="selectOpt('tobi','飛び終了','飛びあり（即終了）')">飛びあり（即終了）</button>
+                <button class="ropt-btn" data-rule="tobi" data-val="nashi" onclick="selectOpt('tobi','飛び終了','飛びなし（オーラスまで続行）')">飛びなし（続行）</button>
+              </div>
+              <div class="rule-sub-title" style="margin-top:10px">箱下計算</div>
+              <div class="rule-para">飛んだ後のマイナス点を精算するか。</div>
+              <div class="rule-opts">
+                <button class="ropt-btn" data-rule="hakooshita" data-val="keisan" onclick="selectOpt('hakooshita','箱下計算','箱下精算あり')">箱下精算あり</button>
+                <button class="ropt-btn" data-rule="hakooshita" data-val="zero" onclick="selectOpt('hakooshita','箱下計算','箱下0扱い')">箱下0扱い</button>
+              </div>
+              <div class="rule-sub-title" style="margin-top:10px">焼き鳥</div>
+              <div class="rule-para">1回の対局中に1度もアガれなかったプレイヤーへの罰則。</div>
+              <div class="rule-opts">
+                <button class="ropt-btn" data-rule="yakitori" data-val="3000" onclick="selectOpt('yakitori','焼き鳥','3000点')">3000点</button>
+                <button class="ropt-btn" data-rule="yakitori" data-val="5000" onclick="selectOpt('yakitori','焼き鳥','5000点')">5000点</button>
+                <button class="ropt-btn" data-rule="yakitori" data-val="chip" onclick="selectOpt('yakitori','焼き鳥','チップ1枚')">チップ1枚</button>
+                <button class="ropt-btn" data-rule="yakitori" data-val="nashi" onclick="selectOpt('yakitori','焼き鳥','なし')">なし</button>
+              </div>
+              <div class="rule-sub-title" style="margin-top:10px">チョンボの精算方法</div>
+              <div class="rule-para">誤アガリや錯和など反則時の罰則。</div>
+              <div class="rule-opts">
+                <button class="ropt-btn" data-rule="chombo" data-val="mangan" onclick="selectOpt('chombo','チョンボ精算','満貫払い')">満貫払い</button>
+                <button class="ropt-btn" data-rule="chombo" data-val="8000" onclick="selectOpt('chombo','チョンボ精算','8000点オール相当')">8000点オール相当</button>
+                <button class="ropt-btn" data-rule="chombo" data-val="replay" onclick="selectOpt('chombo','チョンボ精算','その局やり直し')">その局やり直し</button>
+                <button class="ropt-btn" data-rule="chombo" data-val="nashi" onclick="selectOpt('chombo','チョンボ精算','なし')">なし</button>
+              </div>
+              <div class="rule-note">チョンボ例：誤アガリ（役なしでアガリ宣言）・多牌少牌（手牌枚数の過不足）・錯和（役の申告ミス）</div>
+            </div>
+          </div>
+
+          <div class="rule-card">
+            <div class="rule-card-title">🏆 役満に関するルール</div>
+            <div class="rule-card-body">
+              <div class="rule-sub-title">数え役満</div>
+              <div class="rule-para">13翻以上で役満扱いにするか、三倍満止まりか。</div>
+              <div class="rule-opts">
+                <button class="ropt-btn" data-rule="kazoe" data-val="yakuman" onclick="selectOpt('kazoe','数え役満','役満扱い')">役満扱い</button>
+                <button class="ropt-btn" data-rule="kazoe" data-val="sanbaiman" onclick="selectOpt('kazoe','数え役満','三倍満止まり')">三倍満止まり</button>
+              </div>
+              <div class="rule-sub-title" style="margin-top:10px">ダブル役満</div>
+              <div class="rule-para">国士無双13面待ち・純正九蓮宝燈・大四喜などを2倍とするか。</div>
+              <div class="rule-opts">
+                <button class="ropt-btn" data-rule="double_yakuman" data-val="yes" onclick="selectOpt('double_yakuman','ダブル役満','あり')">あり（yes）</button>
+                <button class="ropt-btn" data-rule="double_yakuman" data-val="no" onclick="selectOpt('double_yakuman','ダブル役満','なし')">なし（no）</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="rule-card">
+            <div class="rule-card-title">🈴 三麻（3人麻雀）特有</div>
+            <div class="rule-card-body">
+              <div class="rule-sub-title">北抜き</div>
+              <div class="rule-para">北をドラとして抜いて使うルール。</div>
+              <div class="rule-opts">
+                <button class="ropt-btn" data-rule="kita" data-val="yes" onclick="selectOpt('kita','北抜き','あり')">あり（yes）</button>
+                <button class="ropt-btn" data-rule="kita" data-val="no" onclick="selectOpt('kita','北抜き','なし')">なし（no）</button>
+              </div>
+            </div>
+          </div>
+`
       },
       {
         label: '対局',
@@ -926,7 +1114,7 @@
 
   let states = [];
   let mode = null;
-  let checkedRules = {};
+  let selectedOpts = {};
 
   function save() {
     localStorage.setItem('mjStates', JSON.stringify(states));
@@ -937,7 +1125,7 @@
     const m = localStorage.getItem('mjMode');
     if (m) mode = m || null;
     if (s) { try { states = JSON.parse(s); } catch(e) {} }
-    try { const r = localStorage.getItem('mjRules'); if (r) checkedRules = JSON.parse(r); } catch(e) {}
+    try { const o = localStorage.getItem('mjOpts'); if (o) selectedOpts = JSON.parse(o); } catch(e) {}
   }
 
   /* ---- ステッパーとステップカードをDOMに生成 ---- */
@@ -1167,39 +1355,49 @@
   }
 
   /* ---- rules panel ---- */
-  function toggleRule(id, label) {
-    if (checkedRules[id]) {
-      delete checkedRules[id];
+  function selectOpt(ruleId, ruleLabel, value) {
+    if (selectedOpts[ruleId]?.value === value) {
+      delete selectedOpts[ruleId];
     } else {
-      checkedRules[id] = label;
+      selectedOpts[ruleId] = { label: ruleLabel, value };
     }
-    const cb  = document.getElementById('cb-' + id);
-    const row = document.getElementById('ri-' + id);
-    if (cb)  cb.checked = !!checkedRules[id];
-    if (row) row.classList.toggle('checked', !!checkedRules[id]);
-    localStorage.setItem('mjRules', JSON.stringify(checkedRules));
+    document.querySelectorAll(`[data-rule="${ruleId}"]`).forEach(btn => {
+      btn.classList.toggle('selected', btn.getAttribute('data-val') === (selectedOpts[ruleId]?.value ?? ''));
+    });
+    localStorage.setItem('mjOpts', JSON.stringify(selectedOpts));
+    renderRulesPanel();
+  }
+
+  function toggleOpt(optId, displayLabel) {
+    if (selectedOpts[optId]) {
+      delete selectedOpts[optId];
+    } else {
+      selectedOpts[optId] = { label: displayLabel, value: '採用' };
+    }
+    const btn = document.querySelector(`[data-optid="${optId}"]`);
+    if (btn) btn.classList.toggle('selected', !!selectedOpts[optId]);
+    localStorage.setItem('mjOpts', JSON.stringify(selectedOpts));
     renderRulesPanel();
   }
 
   function clearRules() {
-    checkedRules = {};
-    localStorage.setItem('mjRules', JSON.stringify(checkedRules));
-    document.querySelectorAll('.rule-cb').forEach(cb => cb.checked = false);
-    document.querySelectorAll('.info-item.checked').forEach(el => el.classList.remove('checked'));
+    selectedOpts = {};
+    localStorage.setItem('mjOpts', JSON.stringify(selectedOpts));
+    document.querySelectorAll('.ropt-btn.selected').forEach(b => b.classList.remove('selected'));
     renderRulesPanel();
   }
 
   function renderRulesPanel() {
-    const keys  = Object.keys(checkedRules);
+    const keys  = Object.keys(selectedOpts);
     const count = keys.length;
-    const html  = keys.map(k =>
-      `<div class="rules-panel-item"><span class="rules-panel-tick">✓</span>${checkedRules[k]}</div>`
-    ).join('');
-    const emptyMsg = 'ステップ２で<br>項目をタップして<br>チェックすると<br>ここに表示されます';
+    const html  = keys.map(k => {
+      const o = selectedOpts[k];
+      const text = o.value === '採用' ? o.label : `${o.label}：${o.value}`;
+      return `<div class="rules-panel-item"><span class="rules-panel-tick">✓</span>${text}</div>`;
+    }).join('');
 
     document.getElementById('rp-cnt').textContent  = count;
     document.getElementById('rp-list').innerHTML   = html;
-    document.getElementById('rp-empty').innerHTML  = emptyMsg;
     document.getElementById('rp-empty').style.display = count ? 'none' : 'block';
 
     document.getElementById('fab-cnt').textContent = count;
@@ -1211,12 +1409,13 @@
     document.getElementById('rules-fab').classList.toggle('show', show);
   }
 
-  function restoreCheckboxes() {
-    Object.keys(checkedRules).forEach(id => {
-      const cb  = document.getElementById('cb-' + id);
-      const row = document.getElementById('ri-' + id);
-      if (cb)  cb.checked = true;
-      if (row) row.classList.add('checked');
+  function restoreSelections() {
+    Object.keys(selectedOpts).forEach(id => {
+      const o = selectedOpts[id];
+      const btn = document.querySelector(`[data-rule="${id}"][data-val="${o.value}"]`);
+      if (btn) btn.classList.add('selected');
+      const optBtn = document.querySelector(`[data-optid="${id}"]`);
+      if (optBtn) optBtn.classList.add('selected');
     });
   }
 
@@ -1255,7 +1454,7 @@
     buildSteps();
     showFlow();
     render();
-    restoreCheckboxes();
+    restoreSelections();
     renderRulesPanel();
     if (mode === 'set') {
       const body1 = document.getElementById('body-1');
