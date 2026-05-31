@@ -361,202 +361,10 @@
     </div>
 
     <!-- Stepper -->
-    <div class="stepper" id="stepper" style="display:none">
-      <div class="step-item" id="si-0" onclick="jumpToStep(0)">
-        <div class="step-circle" id="sc-0">1</div>
-        <div class="step-label">入店・<br>受付</div>
-      </div>
-      <div class="step-item" id="si-1" onclick="jumpToStep(1)">
-        <div class="step-circle" id="sc-1">2</div>
-        <div class="step-label">メンバー<br>待ち</div>
-      </div>
-      <div class="step-item" id="si-2" onclick="jumpToStep(2)">
-        <div class="step-circle" id="sc-2">3</div>
-        <div class="step-label">卓の<br>セット</div>
-      </div>
-      <div class="step-item" id="si-3" onclick="jumpToStep(3)">
-        <div class="step-circle" id="sc-3">4</div>
-        <div class="step-label">対局<br>スタート</div>
-      </div>
-      <div class="step-item" id="si-4" onclick="jumpToStep(4)">
-        <div class="step-circle" id="sc-4">5</div>
-        <div class="step-label">精算</div>
-      </div>
-    </div>
+    <div class="stepper" id="stepper" style="display:none"></div>
 
-    <!-- Steps container -->
-    <div id="steps-container" style="display:none">
-
-      <!-- Step 0 -->
-      <div class="card" id="card-0">
-        <div class="card-header" onclick="toggleCard(0)">
-          <div class="card-num" id="cn-0">1</div>
-          <div class="card-info">
-            <div class="card-title">入店・受付</div>
-            <div class="card-desc">「フリーで一人です」と伝える。会員証・料金システムを確認。</div>
-          </div>
-          <span class="card-badge" id="cb-0">-</span>
-          <div class="card-toggle" id="ct-0">
-            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" width="12"><path d="M4 6l4 4 4-4"/></svg>
-          </div>
-        </div>
-        <div class="card-body" id="body-0">
-          <div class="detail-section">
-            <div class="detail-title">入店時に言うフレーズ</div>
-            <div class="phrase-box">
-              <div class="phrase-q">スタッフに話しかけて</div>
-              <div class="phrase-a">「フリーで一人なんですが、入れますか？」</div>
-              <div class="phrase-note">※フリー＝知らない人と卓を囲むこと</div>
-            </div>
-            <div class="phrase-box">
-              <div class="phrase-q">初心者なら正直に伝えると安心</div>
-              <div class="phrase-a">「初めて来たんですが、教えてもらえますか？」</div>
-            </div>
-          </div>
-          <div class="detail-section">
-            <div class="detail-title">確認しておくこと</div>
-            <div class="info-list">
-              <div class="info-item"><span class="info-icon">💳</span><div class="info-text"><b>会員証</b>が必要か（多くの店で無料作成できる）</div></div>
-              <div class="info-item"><span class="info-icon">💴</span><div class="info-text"><b>料金体系</b>：時間制 or セット制。東風戦・半荘いくらか</div></div>
-              <div class="info-item"><span class="info-icon">🚬</span><div class="info-text">喫煙・禁煙の座席があるか</div></div>
-            </div>
-          </div>
-          <button class="complete-btn" id="cbtn-0" onclick="completeStep(0)">✓ このステップを完了する</button>
-        </div>
-      </div>
-
-      <!-- Step 1 -->
-      <div class="card" id="card-1">
-        <div class="card-header" onclick="toggleCard(1)">
-          <div class="card-num" id="cn-1">2</div>
-          <div class="card-info">
-            <div class="card-title">待機・呼ばれるのを待つ</div>
-            <div class="card-desc">メンバーが揃い次第、スタッフに席へ案内してもらう。</div>
-          </div>
-          <span class="card-badge" id="cb-1">-</span>
-          <div class="card-toggle" id="ct-1">
-            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" width="12"><path d="M4 6l4 4 4-4"/></svg>
-          </div>
-        </div>
-        <div class="card-body" id="body-1">
-          <div class="detail-section">
-            <div class="tip-box">
-              <strong>待ち時間の目安</strong><br>
-              空き席があればすぐ案内。混雑時は5〜20分ほど待つこともあります。
-              ドリンクを注文したり、スマホで役の確認をしておくとよいです。
-            </div>
-            <div class="info-list">
-              <div class="info-item"><span class="info-icon">📋</span><div class="info-text">名前や番号を控えてくれる店もある。呼ばれたらすぐ立てるよう近くにいよう</div></div>
-              <div class="info-item"><span class="info-icon">🤝</span><div class="info-text">卓に案内されたらあいさつ：「よろしくお願いします」</div></div>
-            </div>
-          </div>
-          <div class="branch-box" id="cbtn-1">
-            <div class="branch-label">状況を選んでください</div>
-            <div class="branch-row">
-              <button class="branch-btn branch-wait" onclick="completeStep(1)">
-                <span class="branch-icon">⏳</span>
-                <span class="branch-text">
-                  <b>まだ揃っていない</b>
-                  <small>引き続き待機する</small>
-                </span>
-                <span class="branch-arrow">→ ステップ2完了</span>
-              </button>
-              <button class="branch-btn branch-ready" onclick="skipWait()">
-                <span class="branch-icon">✅</span>
-                <span class="branch-text">
-                  <b>すでに揃っている！</b>
-                  <small>そのまま卓へ案内される</small>
-                </span>
-                <span class="branch-arrow">→ ステップ3へ</span>
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Step 2 -->
-      <div class="card" id="card-2">
-        <div class="card-header" onclick="toggleCard(2)">
-          <div class="card-num" id="cn-2">3</div>
-          <div class="card-info">
-            <div class="card-title">卓のボタン操作・セット</div>
-            <div class="card-desc">自動卓の操作。牌を洗牌して対戦準備をする。</div>
-          </div>
-          <span class="card-badge" id="cb-2">-</span>
-          <div class="card-toggle" id="ct-2">
-            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" width="12"><path d="M4 6l4 4 4-4"/></svg>
-          </div>
-        </div>
-        <div class="card-body" id="body-2">
-          <div class="detail-section">
-            <div class="tip-box">
-              <strong>自動卓（全自動麻雀卓）の基本操作</strong><br>
-              牌が自動でセットされる卓が多いです。初回はスタッフが操作してくれるので慌てずOK。
-            </div>
-            <div class="info-list">
-              <div class="info-item"><span class="info-icon">🔴</span><div class="info-text"><b>スタートボタン</b>を押すと牌の洗牌が始まる（全員で押す店もある）</div></div>
-              <div class="info-item"><span class="info-icon">🀄</span><div class="info-text">牌山が自動で上がってきたら、<b>サイコロを振って</b>山を決める</div></div>
-              <div class="info-item"><span class="info-icon">🎯</span><div class="info-text">親が決まったら配牌。自分の前に来た山から<b>13枚</b>取る</div></div>
-              <div class="info-item"><span class="info-icon">❓</span><div class="info-text">わからなければ「初めてなので教えてください」と遠慮なく言おう</div></div>
-            </div>
-          </div>
-          <button class="complete-btn" id="cbtn-2" onclick="completeStep(2)">✓ このステップを完了する</button>
-        </div>
-      </div>
-
-      <!-- Step 3 -->
-      <div class="card" id="card-3">
-        <div class="card-header" onclick="toggleCard(3)">
-          <div class="card-num" id="cn-3">4</div>
-          <div class="card-info">
-            <div class="card-title">対局スタート</div>
-            <div class="card-desc">ツモ・ポン・チー・カンを繰り返してアガリを目指す。</div>
-          </div>
-          <span class="card-badge" id="cb-3">-</span>
-          <div class="card-toggle" id="ct-3">
-            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" width="12"><path d="M4 6l4 4 4-4"/></svg>
-          </div>
-        </div>
-        <div class="card-body" id="body-3">
-          <div class="detail-section">
-            <div class="info-list">
-              <div class="info-item"><span class="info-icon">🔄</span><div class="info-text"><b>ツモ</b>：山から1枚引いて、不要な牌を1枚捨てる</div></div>
-              <div class="info-item"><span class="info-icon">📣</span><div class="info-text"><b>ポン</b>：他家の捨て牌と自分の同じ牌2枚で鳴く（3枚にする）</div></div>
-              <div class="info-item"><span class="info-icon">📣</span><div class="info-text"><b>チー</b>：左隣（上家）の捨て牌で順子を完成させる</div></div>
-              <div class="info-item"><span class="info-icon">🏆</span><div class="info-text"><b>ロン</b>：他家の捨て牌でアガリ。「ロン！」と声に出して宣言</div></div>
-              <div class="info-item"><span class="info-icon">🏆</span><div class="info-text"><b>ツモアガリ</b>：山から引いた牌でアガリ。「ツモ！」と宣言</div></div>
-            </div>
-          </div>
-          <button class="complete-btn" id="cbtn-3" onclick="completeStep(3)">✓ このステップを完了する</button>
-        </div>
-      </div>
-
-      <!-- Step 4 -->
-      <div class="card" id="card-4">
-        <div class="card-header" onclick="toggleCard(4)">
-          <div class="card-num" id="cn-4">5</div>
-          <div class="card-info">
-            <div class="card-title">精算・退店</div>
-            <div class="card-desc">終局後にスコアを記録し、料金を支払って退店。</div>
-          </div>
-          <span class="card-badge" id="cb-4">-</span>
-          <div class="card-toggle" id="ct-4">
-            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" width="12"><path d="M4 6l4 4 4-4"/></svg>
-          </div>
-        </div>
-        <div class="card-body" id="body-4">
-          <div class="detail-section">
-            <div class="info-list">
-              <div class="info-item"><span class="info-icon">📊</span><div class="info-text">半荘終了後、スタッフまたは自分たちでスコアを計算</div></div>
-              <div class="info-item"><span class="info-icon">💰</span><div class="info-text">点棒の多い順に順位決定。料金＋順位点（ウマ）を精算</div></div>
-              <div class="info-item"><span class="info-icon">🚪</span><div class="info-text">退店時「ありがとうございました」と一言添えるのがマナー</div></div>
-            </div>
-          </div>
-          <button class="complete-btn" id="cbtn-4" onclick="completeStep(4)">✓ このステップを完了する</button>
-        </div>
-      </div>
-
-    </div><!-- /steps-container -->
+    <!-- Steps container (populated by JS) -->
+    <div id="steps-container" style="display:none"></div>
 
     <!-- All done -->
     <div class="all-done" id="all-done">
@@ -739,12 +547,208 @@
 <div class="toast" id="toast"></div>
 
 <script>
-  const TOTAL = 5;
-  // step 1 (index 1) = 待機 — skippable in set mode
-  const SKIP_IN_SET = [1]; // indices skipped when mode=set
+  /* =====================================================
+     ステップ定義（フリー・セット それぞれ）
+     skipable: true のステップはフリーモードで分岐可能
+  ===================================================== */
+  const STEP_DATA = {
+    free: [
+      {
+        label: '入店・\n受付',
+        title: '入店・受付',
+        desc: '「フリーで一人です」と伝える。会員登録・レートを確認。',
+        body: `
+          <div class="detail-section">
+            <div class="detail-title">入店時に言うフレーズ</div>
+            <div class="phrase-box">
+              <div class="phrase-q">受付スタッフに話しかけて</div>
+              <div class="phrase-a">「フリーで一人なんですが、入れますか？」</div>
+              <div class="phrase-note">※フリー＝知らない人と4人で卓を囲むスタイル</div>
+            </div>
+            <div class="phrase-box">
+              <div class="phrase-q">初めての場合は正直に伝えると安心</div>
+              <div class="phrase-a">「フリーは初めてなんですが、教えてもらえますか？」</div>
+            </div>
+          </div>
+          <div class="detail-section">
+            <div class="detail-title">受付で確認・手続きすること</div>
+            <div class="info-list">
+              <div class="info-item"><span class="info-icon">💳</span><div class="info-text"><b>会員登録</b>：初回は身分証（免許証・学生証など）の提示が必要な店が多い。会員カードを発行してもらう</div></div>
+              <div class="info-item"><span class="info-icon">💴</span><div class="info-text"><b>料金体系</b>：フリーは<b>半荘（ゲーム）単位制</b>が多い。1ゲームいくらか確認する</div></div>
+              <div class="info-item"><span class="info-icon">🎯</span><div class="info-text"><b>レート</b>：0.3（ピン）・0.5・1円など店によって異なる。初心者は最低レートの卓を選ぼう</div></div>
+              <div class="info-item"><span class="info-icon">🚬</span><div class="info-text">喫煙・禁煙の席の希望を伝える</div></div>
+            </div>
+          </div>
+          <div class="detail-section">
+            <div class="tip-box"><strong>持ち物の目安</strong><br>身分証・現金（レートの300倍が目安。例：1円レートなら30,000円程度）。ATMが近くにない店も多いので事前に準備を。</div>
+          </div>`
+      },
+      {
+        label: '待機',
+        title: '待機・呼ばれるのを待つ',
+        desc: '空き卓が出るまで待合スペースで待つ。整理券をもらう店も。',
+        skipable: true,
+        body: `
+          <div class="detail-section">
+            <div class="tip-box"><strong>待ち時間の目安</strong><br>空きがあればすぐ案内。週末・夜は1時間以上待つこともある。平日昼がおすすめ。</div>
+            <div class="info-list">
+              <div class="info-item"><span class="info-icon">🎫</span><div class="info-text">整理券や名前を控えてくれる店もある。呼ばれたらすぐ動けるよう近くにいよう</div></div>
+              <div class="info-item"><span class="info-icon">📱</span><div class="info-text">待ち時間にスマホで役の確認をしておくと◎</div></div>
+              <div class="info-item"><span class="info-icon">🤝</span><div class="info-text">卓に案内されたら「よろしくお願いします」とあいさつ</div></div>
+            </div>
+          </div>`,
+        branchLabel: '空き卓の状況は？',
+        branchA: { icon: '⏳', title: 'まだ空いていない', sub: '引き続き待機する', arrow: '→ 待機完了' },
+        branchB: { icon: '✅', title: 'すぐ案内された！', sub: '空き卓あり・即着席', arrow: '→ ステップ3へ' }
+      },
+      {
+        label: '着卓・\n卓セット',
+        title: '着卓・卓のセット',
+        desc: 'スタッフに案内されたら着席。自動卓のボタン操作で対戦準備。',
+        body: `
+          <div class="detail-section">
+            <div class="tip-box"><strong>フリーの着卓マナー</strong><br>知らない人と同卓するので第一印象が大切。「よろしくお願いします」と明るくあいさつしよう。</div>
+            <div class="info-list">
+              <div class="info-item"><span class="info-icon">🔴</span><div class="info-text"><b>スタートボタン</b>を押すと牌の洗牌が始まる（全員で押す店もある）</div></div>
+              <div class="info-item"><span class="info-icon">🀄</span><div class="info-text">牌山が自動で上がってきたら<b>サイコロを振って</b>山を決める</div></div>
+              <div class="info-item"><span class="info-icon">🎯</span><div class="info-text">配牌は親から時計回りに13枚ずつ。自分の前の山から取る</div></div>
+              <div class="info-item"><span class="info-icon">❓</span><div class="info-text">操作がわからなければ「初めてなので教えてください」と遠慮なく言おう。スタッフが教えてくれる</div></div>
+            </div>
+          </div>`
+      },
+      {
+        label: '対局',
+        title: '対局スタート',
+        desc: 'ツモ・打牌・鳴きを繰り返してアガリを目指す。点数はスタッフに聞いてOK。',
+        body: `
+          <div class="detail-section">
+            <div class="tip-box"><strong>フリーならではの注意点</strong><br>点数申告が自信なければスタッフに確認を依頼できる。牌は丁寧に扱い、発声（ポン・チー・ロン）は明確に。</div>
+            <div class="info-list">
+              <div class="info-item"><span class="info-icon">🔄</span><div class="info-text"><b>ツモ</b>：山から1枚引いて、不要な牌を1枚捨てる</div></div>
+              <div class="info-item"><span class="info-icon">📣</span><div class="info-text"><b>ポン</b>：誰の捨て牌でも同じ牌2枚あれば鳴ける</div></div>
+              <div class="info-item"><span class="info-icon">📣</span><div class="info-text"><b>チー</b>：左隣（上家）の捨て牌のみ。順子を完成させるとき</div></div>
+              <div class="info-item"><span class="info-icon">🏆</span><div class="info-text"><b>ロン</b>：他家の捨て牌でアガリ。「ロン！」と宣言して牌を開示</div></div>
+              <div class="info-item"><span class="info-icon">🏆</span><div class="info-text"><b>ツモ</b>：山からツモってアガリ。「ツモ！」と宣言</div></div>
+              <div class="info-item"><span class="info-icon">⚠️</span><div class="info-text">役なしはアガれない。リーチ・タンヤオ・役牌などを意識しよう</div></div>
+            </div>
+          </div>`
+      },
+      {
+        label: '精算・\n退店',
+        title: '精算・退店',
+        desc: 'ゲーム代＋勝敗収支を精算。スタッフが補助してくれる。',
+        body: `
+          <div class="detail-section">
+            <div class="info-list">
+              <div class="info-item"><span class="info-icon">🧮</span><div class="info-text">終局後、スタッフが点数確認・精算を手伝ってくれる。わからなければ任せてOK</div></div>
+              <div class="info-item"><span class="info-icon">💴</span><div class="info-text"><b>支払い内容</b>：ゲーム代（半荘単位）＋勝敗のウマ収支＋チップ（ある場合）</div></div>
+              <div class="info-item"><span class="info-icon">🃏</span><div class="info-text">チップ（一発・裏ドラ・嶺上など）がある場合は枚数を数えて現金換算</div></div>
+              <div class="info-item"><span class="info-icon">🚪</span><div class="info-text">同卓者・スタッフに「ありがとうございました」と一言添えて退店</div></div>
+            </div>
+          </div>
+          <div class="detail-section">
+            <div class="tip-box"><strong>退席のタイミング</strong><br>半荘の区切りで「次で上がらせてもらいます」と全員に伝えるのがマナー。急用の場合はスタッフに相談すると代わりのメンバーを手配してくれる。</div>
+          </div>`
+      }
+    ],
 
-  let states = ['current','upcoming','upcoming','upcoming','upcoming'];
-  let mode = null; // null | 'free' | 'set'
+    set: [
+      {
+        label: '予約・\n入店',
+        title: '予約・入店',
+        desc: '事前に電話予約が◎。「セットで○名予約の○○です」と伝える。',
+        body: `
+          <div class="detail-section">
+            <div class="detail-title">入店前に電話予約しよう</div>
+            <div class="phrase-box">
+              <div class="phrase-q">電話での予約フレーズ</div>
+              <div class="phrase-a">「○月○日の○時ごろからセット1卓、○名で予約したいのですが」</div>
+              <div class="phrase-note">※金曜夜〜日曜は混雑するため予約推奨。平日は当日でも入れることが多い</div>
+            </div>
+            <div class="detail-title" style="margin-top:12px">入店時に言うフレーズ</div>
+            <div class="phrase-box">
+              <div class="phrase-q">受付に着いたら</div>
+              <div class="phrase-a">「セットで予約していた○○です。○名です。」</div>
+            </div>
+          </div>
+          <div class="detail-section">
+            <div class="detail-title">入店時に確認・手続きすること</div>
+            <div class="info-list">
+              <div class="info-item"><span class="info-icon">💳</span><div class="info-text">初回は<b>会員登録</b>が必要な店も。身分証を持参しよう</div></div>
+              <div class="info-item"><span class="info-icon">💴</span><div class="info-text"><b>料金体系</b>：セットは<b>時間制</b>が多い（1人1時間200〜400円程度）。学生は学割あり</div></div>
+              <div class="info-item"><span class="info-icon">🕐</span><div class="info-text">予約時間の10〜20分前から入卓できる店が多い。先に来た人は卓で待てる</div></div>
+              <div class="info-item"><span class="info-icon">🚬</span><div class="info-text">禁煙・喫煙の卓希望を伝える</div></div>
+            </div>
+          </div>`
+      },
+      {
+        label: 'ルール\n設定',
+        title: 'ルール設定・着卓',
+        desc: '全員揃ったらスタッフを呼んでルールを設定する。',
+        body: `
+          <div class="detail-section">
+            <div class="tip-box"><strong>ルール設定はスタッフに頼もう</strong><br>卓についたらスタッフを呼んで「ルール設定お願いします」と声をかける。設定が終わればそのまま開始できる。</div>
+            <div class="detail-title">聞かれる主な設定項目</div>
+            <div class="info-list">
+              <div class="info-item"><span class="info-icon">👥</span><div class="info-text"><b>ヨンマ or サンマ</b>：4人打ち（ヨンマ）か3人打ち（サンマ）か。関東はヨンマが多い</div></div>
+              <div class="info-item"><span class="info-icon">🌸</span><div class="info-text"><b>花牌・赤ドラ</b>の有無：ルールに入れるか確認される</div></div>
+              <div class="info-item"><span class="info-icon">🎓</span><div class="info-text"><b>学割</b>：学生は学生証を提示すると料金が半額になる店が多い</div></div>
+              <div class="info-item"><span class="info-icon">⏱️</span><div class="info-text">打つ時間の目安を伝えておくとスムーズ（「2〜3時間くらい」など）</div></div>
+            </div>
+          </div>
+          <div class="detail-section">
+            <div class="detail-title">卓の操作</div>
+            <div class="info-list">
+              <div class="info-item"><span class="info-icon">🔴</span><div class="info-text"><b>スタートボタン</b>で洗牌開始。スタッフがやってくれることも多い</div></div>
+              <div class="info-item"><span class="info-icon">🀄</span><div class="info-text">牌山が上がったらサイコロを振って山・親を決める</div></div>
+              <div class="info-item"><span class="info-icon">🎯</span><div class="info-text">配牌は13枚。自分の前の山から順番に取る</div></div>
+            </div>
+          </div>`
+      },
+      {
+        label: '対局',
+        title: '対局スタート',
+        desc: 'セルフサービスで自由に進める。トラブル時のみスタッフへ。',
+        body: `
+          <div class="detail-section">
+            <div class="tip-box"><strong>セットはセルフサービスが基本</strong><br>フリーと違い、スタッフが常に介入するわけではない。点数計算・ルール確認は仲間同士で行うのが基本。困ったときだけスタッフを呼ぼう。</div>
+            <div class="info-list">
+              <div class="info-item"><span class="info-icon">🔄</span><div class="info-text"><b>ツモ</b>：山から1枚引いて、不要な牌を1枚捨てる</div></div>
+              <div class="info-item"><span class="info-icon">📣</span><div class="info-text"><b>ポン・チー・カン</b>：発声は明確に。仲間内でも曖昧にしないのがマナー</div></div>
+              <div class="info-item"><span class="info-icon">🏆</span><div class="info-text"><b>ロン・ツモ</b>：アガリ宣言後、牌を開示して役を申告</div></div>
+              <div class="info-item"><span class="info-icon">🍹</span><div class="info-text">ドリンクは自分で購入か持ち込み。卓上に置くときはこぼさないよう注意</div></div>
+              <div class="info-item"><span class="info-icon">🔇</span><div class="info-text">牌を強打しない・騒ぎすぎない。他の卓への配慮を忘れずに</div></div>
+            </div>
+          </div>`
+      },
+      {
+        label: '精算・\n退店',
+        title: '精算・退店',
+        desc: '「終了で」と伝えると伝票が出る。時間制で計算される。',
+        body: `
+          <div class="detail-section">
+            <div class="detail-title">退店の手順</div>
+            <div class="phrase-box">
+              <div class="phrase-q">帰る際にスタッフへ</div>
+              <div class="phrase-a">「終了でお願いします」</div>
+              <div class="phrase-note">伝票を受け取り、時間分の卓代＋飲食代を支払う</div>
+            </div>
+            <div class="info-list">
+              <div class="info-item"><span class="info-icon">⏱️</span><div class="info-text"><b>卓代</b>：時間制（1人あたりの利用時間×料金）。全員で割り勘が一般的</div></div>
+              <div class="info-item"><span class="info-icon">🧮</span><div class="info-text">勝敗の<b>ウマ収支</b>は仲間同士で現金精算する</div></div>
+              <div class="info-item"><span class="info-icon">🃏</span><div class="info-text">チップ（一発・裏ドラなど）がある場合は枚数を数えて清算</div></div>
+              <div class="info-item"><span class="info-icon">🚪</span><div class="info-text">スタッフに「ありがとうございました」と一言添えて退店</div></div>
+            </div>
+          </div>
+          <div class="detail-section">
+            <div class="tip-box"><strong>途中退席したいときは</strong><br>半荘の区切りで抜けるのがマナー。残りの人数が3人になる場合は、スタッフに相談すればフリーのメンバーを補充してもらえることもある。</div>
+          </div>`
+      }
+    ]
+  };
+
+  let states = [];
+  let mode = null;
 
   function save() {
     localStorage.setItem('mjStates', JSON.stringify(states));
@@ -753,28 +757,79 @@
   function load() {
     const s = localStorage.getItem('mjStates');
     const m = localStorage.getItem('mjMode');
-    if (s) { try { states = JSON.parse(s); } catch(e) {} }
     if (m) mode = m || null;
+    if (s) { try { states = JSON.parse(s); } catch(e) {} }
+  }
+
+  /* ---- ステッパーとステップカードをDOMに生成 ---- */
+  function buildSteps() {
+    const steps = STEP_DATA[mode];
+    const TOTAL = steps.length;
+
+    // stepper
+    const stepper = document.getElementById('stepper');
+    stepper.innerHTML = steps.map((s, i) => `
+      <div class="step-item" id="si-${i}" onclick="jumpToStep(${i})">
+        <div class="step-circle" id="sc-${i}">${i+1}</div>
+        <div class="step-label">${s.label.replace('\n','<br>')}</div>
+      </div>`).join('');
+
+    // cards
+    const container = document.getElementById('steps-container');
+    container.innerHTML = steps.map((s, i) => {
+      const hasBranch = !!s.skipable;
+      const btnHtml = hasBranch
+        ? `<div class="branch-box" id="cbtn-${i}">
+            <div class="branch-label">${s.branchLabel}</div>
+            <div class="branch-row">
+              <button class="branch-btn branch-wait" onclick="completeStep(${i})">
+                <span class="branch-icon">${s.branchA.icon}</span>
+                <span class="branch-text"><b>${s.branchA.title}</b><small>${s.branchA.sub}</small></span>
+                <span class="branch-arrow">${s.branchA.arrow}</span>
+              </button>
+              <button class="branch-btn branch-ready" onclick="skipStep(${i})">
+                <span class="branch-icon">${s.branchB.icon}</span>
+                <span class="branch-text"><b>${s.branchB.title}</b><small>${s.branchB.sub}</small></span>
+                <span class="branch-arrow">${s.branchB.arrow}</span>
+              </button>
+            </div>
+          </div>`
+        : `<button class="complete-btn" id="cbtn-${i}" onclick="completeStep(${i})">✓ このステップを完了する</button>`;
+
+      return `
+        <div class="card" id="card-${i}">
+          <div class="card-header" onclick="toggleCard(${i})">
+            <div class="card-num" id="cn-${i}">${i+1}</div>
+            <div class="card-info">
+              <div class="card-title">${s.title}</div>
+              <div class="card-desc">${s.desc}</div>
+            </div>
+            <span class="card-badge" id="cb-${i}">-</span>
+            <div class="card-toggle" id="ct-${i}">
+              <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" width="12"><path d="M4 6l4 4 4-4"/></svg>
+            </div>
+          </div>
+          <div class="card-body" id="body-${i}">
+            ${s.body}
+            ${btnHtml}
+          </div>
+        </div>`;
+    }).join('');
   }
 
   /* ---- mode selection ---- */
   function selectMode(m) {
     mode = m;
-    // reset states fresh for chosen mode
-    if (mode === 'set') {
-      // skip step index 1 (待機), start at 0
-      states = ['current','skip','upcoming','upcoming','upcoming'];
-    } else {
-      states = ['current','upcoming','upcoming','upcoming','upcoming'];
-    }
+    const steps = STEP_DATA[mode];
+    states = steps.map((_, i) => i === 0 ? 'current' : 'upcoming');
+    buildSteps();
     save();
     showFlow();
     render();
   }
 
   function resetMode() {
-    mode = null;
-    states = ['current','upcoming','upcoming','upcoming','upcoming'];
+    mode = null; states = [];
     save();
     showEntry();
   }
@@ -783,7 +838,7 @@
     document.getElementById('entry-select').style.display = 'none';
     document.getElementById('mode-banner').style.display = 'flex';
     document.getElementById('mode-banner-text').textContent =
-      mode === 'set' ? '👥 セットモード：メンバーは揃っています' : '🚶 フリーモード：一人で入店';
+      mode === 'set' ? '👥 セットモード：仲間と一緒に入店' : '🚶 フリーモード：一人で入店';
     document.getElementById('progress-wrap').style.display = 'block';
     document.getElementById('stepper').style.display = 'flex';
     document.getElementById('steps-container').style.display = 'block';
@@ -800,66 +855,59 @@
 
   /* ---- render ---- */
   function render() {
-    const activeCounts = states.filter(s => s === 'done').length;
+    const TOTAL = states.length;
+    const doneCount = states.filter(s => s === 'done').length;
     const activeTotal = states.filter(s => s !== 'skip').length;
-    document.getElementById('progress-fill').style.width = (activeCounts / activeTotal * 100) + '%';
-    document.getElementById('progress-text').textContent = activeCounts + ' / ' + activeTotal + ' 完了';
+    document.getElementById('progress-fill').style.width = (doneCount / activeTotal * 100) + '%';
+    document.getElementById('progress-text').textContent = doneCount + ' / ' + activeTotal + ' 完了';
 
     for (let i = 0; i < TOTAL; i++) {
-      const st = states[i]; // 'current'|'upcoming'|'done'|'skip'
+      const st = states[i];
       const card = document.getElementById('card-' + i);
-      const si = document.getElementById('si-' + i);
-      const sc = document.getElementById('sc-' + i);
-      const cn = document.getElementById('cn-' + i);
-      const cb = document.getElementById('cb-' + i);
+      const si   = document.getElementById('si-' + i);
+      const sc   = document.getElementById('sc-' + i);
+      const cn   = document.getElementById('cn-' + i);
+      const cb   = document.getElementById('cb-' + i);
       const cbtn = document.getElementById('cbtn-' + i);
 
-      // card classes
       card.classList.remove('current-step','done-step','skipped-step');
       if (st === 'current') card.classList.add('current-step');
       if (st === 'done')    card.classList.add('done-step');
       if (st === 'skip')    card.classList.add('skipped-step');
 
-      // stepper circle
       si.classList.remove('done','current');
-      if (st === 'done') si.classList.add('done');
+      if (st === 'done' || st === 'skip') si.classList.add('done');
       if (st === 'current') si.classList.add('current');
-      sc.innerHTML = st === 'done'
+
+      sc.innerHTML = (st === 'done' || st === 'skip')
         ? (i+1) + '<span class="step-check">✓</span>'
         : (i+1);
-
-      // card num
-      cn.innerHTML = st === 'done'
+      cn.innerHTML = (st === 'done' || st === 'skip')
         ? (i+1) + '<span style="font-size:9px;margin-left:1px">✓</span>'
         : (i+1);
 
-      // badge
       cb.className = 'card-badge';
-      if (st === 'done')    { cb.classList.add('badge-done');     cb.textContent = '完了'; }
-      else if (st === 'current') { cb.classList.add('badge-current'); cb.textContent = '進行中'; }
-      else if (st === 'skip')   { cb.classList.add('badge-skip');    cb.textContent = 'スキップ'; }
-      else { cb.classList.add('badge-upcoming'); cb.textContent = i === TOTAL-1 ? '後で' : '次へ'; }
+      if (st === 'done')         { cb.classList.add('badge-done');     cb.textContent = '完了'; }
+      else if (st === 'skip')    { cb.classList.add('badge-skip');     cb.textContent = 'スキップ'; }
+      else if (st === 'current') { cb.classList.add('badge-current');  cb.textContent = '進行中'; }
+      else                       { cb.classList.add('badge-upcoming'); cb.textContent = i === TOTAL-1 ? '後で' : '次へ'; }
 
-      // complete button / branch box
       if (cbtn) {
         const show = st === 'current';
         cbtn.style.display = show ? (cbtn.classList.contains('branch-box') ? 'block' : 'flex') : 'none';
       }
     }
 
-    // auto open current step
     const curIdx = states.indexOf('current');
     if (curIdx >= 0) {
       const body = document.getElementById('body-' + curIdx);
       const ct   = document.getElementById('ct-' + curIdx);
-      if (!body.classList.contains('open')) {
-        body.classList.add('open');
-        ct.classList.add('open');
+      if (body && !body.classList.contains('open')) {
+        body.classList.add('open'); ct.classList.add('open');
       }
     }
 
-    // all done?
-    const allDone = states.every(s => s === 'done' || s === 'skip');
+    const allDone = states.length > 0 && states.every(s => s === 'done' || s === 'skip');
     document.getElementById('all-done').classList.toggle('show', allDone);
     document.getElementById('steps-container').style.display = allDone ? 'none' : 'block';
   }
@@ -870,54 +918,38 @@
     states[idx] = 'done';
     document.getElementById('body-' + idx).classList.remove('open');
     document.getElementById('ct-' + idx).classList.remove('open');
-
-    // find next non-skip step
     let next = idx + 1;
-    while (next < TOTAL && states[next] === 'skip') next++;
-    if (next < TOTAL) states[next] = 'current';
-
-    save();
-    render();
+    while (next < states.length && states[next] === 'skip') next++;
+    if (next < states.length) states[next] = 'current';
+    save(); render();
     showToast('ステップ ' + (idx + 1) + ' 完了！');
-    if (next < TOTAL) {
-      setTimeout(() => {
-        document.getElementById('card-' + next).scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }, 200);
+    if (next < states.length) {
+      setTimeout(() => document.getElementById('card-' + next).scrollIntoView({ behavior: 'smooth', block: 'start' }), 200);
     }
   }
 
-  function skipWait() {
-    // step2の分岐ボタン「すでに揃っている」→ 待機をスキップしてステップ3へ
-    states[1] = 'skip';
-    states[1] === 'skip'; // already set
-    // find current (step 0 should be done first — but just in case)
-    states[0] = 'done';
-    states[2] = 'current';
-    document.getElementById('body-0').classList.remove('open');
-    document.getElementById('ct-0').classList.remove('open');
-    document.getElementById('body-1').classList.remove('open');
-    document.getElementById('ct-1').classList.remove('open');
-    save();
-    render();
-    showToast('メンバー揃い！ステップ3へ進みます');
-    setTimeout(() => {
-      document.getElementById('card-2').scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }, 200);
+  function skipStep(idx) {
+    if (states[idx] !== 'current') return;
+    states[idx] = 'skip';
+    document.getElementById('body-' + idx).classList.remove('open');
+    document.getElementById('ct-' + idx).classList.remove('open');
+    let next = idx + 1;
+    while (next < states.length && states[next] === 'skip') next++;
+    if (next < states.length) states[next] = 'current';
+    save(); render();
+    showToast('スキップ → ステップ ' + (next + 1) + ' へ');
+    if (next < states.length) {
+      setTimeout(() => document.getElementById('card-' + next).scrollIntoView({ behavior: 'smooth', block: 'start' }), 200);
+    }
   }
 
-  function resetSteps() {
-    mode = null;
-    states = ['current','upcoming','upcoming','upcoming','upcoming'];
-    save();
-    showEntry();
-  }
+  function resetSteps() { resetMode(); }
 
   /* ---- UI helpers ---- */
   function toggleCard(idx) {
     const body = document.getElementById('body-' + idx);
     const ct   = document.getElementById('ct-' + idx);
-    body.classList.toggle('open');
-    ct.classList.toggle('open');
+    body.classList.toggle('open'); ct.classList.toggle('open');
   }
 
   function jumpToStep(idx) {
@@ -940,14 +972,19 @@
 
   function showToast(msg) {
     const t = document.getElementById('toast');
-    t.textContent = msg;
-    t.classList.add('show');
+    t.textContent = msg; t.classList.add('show');
     setTimeout(() => t.classList.remove('show'), 2200);
   }
 
   /* ---- init ---- */
   load();
-  if (mode) { showFlow(); render(); } else { showEntry(); }
+  if (mode && STEP_DATA[mode]) {
+    buildSteps();
+    showFlow();
+    render();
+  } else {
+    showEntry();
+  }
 </script>
 </body>
 </html>
