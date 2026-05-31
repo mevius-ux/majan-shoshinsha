@@ -173,6 +173,44 @@
     .phrase-a { font-size: 13px; font-weight: 700; color: #166534; }
     .phrase-note { font-size: 11px; color: #6b7280; margin-top: 3px; }
 
+    /* ===== ENTRY SELECT ===== */
+    .entry-select-wrap {
+      background: #fff; border-radius: 14px; border: 1.5px solid #e5e7eb;
+      padding: 18px 16px; margin-bottom: 20px;
+    }
+    .entry-select-title {
+      font-size: 13px; font-weight: 700; color: #374151;
+      text-align: center; margin-bottom: 12px;
+    }
+    .entry-select-row { display: flex; gap: 10px; }
+    .entry-btn {
+      flex: 1; display: flex; flex-direction: column; align-items: center; gap: 6px;
+      padding: 16px 10px; border-radius: 12px; border: 2px solid #e5e7eb;
+      background: #f9fafb; cursor: pointer; transition: all .15s;
+    }
+    .entry-btn:hover { border-color: #6366f1; background: #eef2ff; }
+    .entry-btn.selected { border-color: #6366f1; background: #eef2ff; }
+    .entry-icon { font-size: 28px; }
+    .entry-label { font-size: 13px; font-weight: 700; color: #1a1a2e; line-height: 1.4; text-align: center; }
+    .entry-label small { font-size: 11px; color: #6b7280; font-weight: 400; }
+    .entry-sub { font-size: 11px; color: #6b7280; text-align: center; }
+
+    /* ===== MODE BANNER ===== */
+    .mode-banner {
+      display: flex; align-items: center; justify-content: space-between;
+      background: #eef2ff; border: 1.5px solid #c7d2fe; border-radius: 10px;
+      padding: 9px 14px; margin-bottom: 16px; font-size: 12px; font-weight: 600; color: #4338ca;
+    }
+    .mode-change-btn {
+      font-size: 11px; color: #6b7280; background: none; border: 1px solid #d1d5db;
+      border-radius: 20px; padding: 3px 10px; cursor: pointer;
+    }
+    .mode-change-btn:hover { border-color: #6366f1; color: #6366f1; }
+
+    /* skipped step */
+    .card.skipped-step { opacity: .5; pointer-events: none; }
+    .badge-skip { background: #f3f4f6; color: #9ca3af; }
+
     /* ===== BRANCH BOX ===== */
     .branch-box { margin-top: 14px; }
     .branch-label {
@@ -295,8 +333,31 @@
     <h1 class="hero-title">雀荘に入ってから<br>対局が始まるまで</h1>
     <p class="hero-sub">「何をすればいいかわからない」を、ひとつずつ解決します。</p>
 
+    <!-- ===== 入店前分岐 ===== -->
+    <div id="entry-select" class="entry-select-wrap">
+      <div class="entry-select-title">まず教えてください</div>
+      <div class="entry-select-row">
+        <button class="entry-btn" id="ebtn-free" onclick="selectMode('free')">
+          <span class="entry-icon">🚶</span>
+          <span class="entry-label">一人で入店<br><small>（フリー）</small></span>
+          <span class="entry-sub">知らない人と卓を囲む</span>
+        </button>
+        <button class="entry-btn" id="ebtn-set" onclick="selectMode('set')">
+          <span class="entry-icon">👥</span>
+          <span class="entry-label">仲間と一緒<br><small>（セット）</small></span>
+          <span class="entry-sub">メンバーはすでに揃っている</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- ===== モード表示バナー ===== -->
+    <div id="mode-banner" class="mode-banner" style="display:none">
+      <span id="mode-banner-text"></span>
+      <button onclick="resetMode()" class="mode-change-btn">変更</button>
+    </div>
+
     <!-- Progress bar -->
-    <div class="progress-wrap">
+    <div class="progress-wrap" id="progress-wrap" style="display:none">
       <div class="progress-bar-bg">
         <div class="progress-bar-fill" id="progress-fill" style="width:0%"></div>
       </div>
@@ -304,7 +365,7 @@
     </div>
 
     <!-- Stepper -->
-    <div class="stepper" id="stepper">
+    <div class="stepper" id="stepper" style="display:none">
       <div class="step-item" id="si-0" onclick="jumpToStep(0)">
         <div class="step-circle" id="sc-0">1</div>
         <div class="step-label">入店・<br>受付</div>
@@ -328,7 +389,7 @@
     </div>
 
     <!-- Steps container -->
-    <div id="steps-container">
+    <div id="steps-container" style="display:none">
 
       <!-- Step 0 -->
       <div class="card" id="card-0">
@@ -683,23 +744,73 @@
 
 <script>
   const TOTAL = 5;
-  // state: array of 'upcoming' | 'current' | 'done'
-  let states = ['current','upcoming','upcoming','upcoming','upcoming'];
+  // step 1 (index 1) = 待機 — skippable in set mode
+  const SKIP_IN_SET = [1]; // indices skipped when mode=set
 
-  function save() { localStorage.setItem('mjStates', JSON.stringify(states)); }
+  let states = ['current','upcoming','upcoming','upcoming','upcoming'];
+  let mode = null; // null | 'free' | 'set'
+
+  function save() {
+    localStorage.setItem('mjStates', JSON.stringify(states));
+    localStorage.setItem('mjMode', mode || '');
+  }
   function load() {
     const s = localStorage.getItem('mjStates');
+    const m = localStorage.getItem('mjMode');
     if (s) { try { states = JSON.parse(s); } catch(e) {} }
+    if (m) mode = m || null;
   }
 
+  /* ---- mode selection ---- */
+  function selectMode(m) {
+    mode = m;
+    // reset states fresh for chosen mode
+    if (mode === 'set') {
+      // skip step index 1 (待機), start at 0
+      states = ['current','skip','upcoming','upcoming','upcoming'];
+    } else {
+      states = ['current','upcoming','upcoming','upcoming','upcoming'];
+    }
+    save();
+    showFlow();
+    render();
+  }
+
+  function resetMode() {
+    mode = null;
+    states = ['current','upcoming','upcoming','upcoming','upcoming'];
+    save();
+    showEntry();
+  }
+
+  function showFlow() {
+    document.getElementById('entry-select').style.display = 'none';
+    document.getElementById('mode-banner').style.display = 'flex';
+    document.getElementById('mode-banner-text').textContent =
+      mode === 'set' ? '👥 セットモード：メンバーは揃っています' : '🚶 フリーモード：一人で入店';
+    document.getElementById('progress-wrap').style.display = 'block';
+    document.getElementById('stepper').style.display = 'flex';
+    document.getElementById('steps-container').style.display = 'block';
+  }
+
+  function showEntry() {
+    document.getElementById('entry-select').style.display = 'block';
+    document.getElementById('mode-banner').style.display = 'none';
+    document.getElementById('progress-wrap').style.display = 'none';
+    document.getElementById('stepper').style.display = 'none';
+    document.getElementById('steps-container').style.display = 'none';
+    document.getElementById('all-done').classList.remove('show');
+  }
+
+  /* ---- render ---- */
   function render() {
-    const doneCount = states.filter(s => s === 'done').length;
-    // progress
-    document.getElementById('progress-fill').style.width = (doneCount / TOTAL * 100) + '%';
-    document.getElementById('progress-text').textContent = doneCount + ' / ' + TOTAL + ' 完了';
+    const activeCounts = states.filter(s => s === 'done').length;
+    const activeTotal = states.filter(s => s !== 'skip').length;
+    document.getElementById('progress-fill').style.width = (activeCounts / activeTotal * 100) + '%';
+    document.getElementById('progress-text').textContent = activeCounts + ' / ' + activeTotal + ' 完了';
 
     for (let i = 0; i < TOTAL; i++) {
-      const st = states[i];
+      const st = states[i]; // 'current'|'upcoming'|'done'|'skip'
       const card = document.getElementById('card-' + i);
       const si = document.getElementById('si-' + i);
       const sc = document.getElementById('sc-' + i);
@@ -708,74 +819,86 @@
       const cbtn = document.getElementById('cbtn-' + i);
 
       // card classes
-      card.classList.remove('current-step','done-step');
+      card.classList.remove('current-step','done-step','skipped-step');
       if (st === 'current') card.classList.add('current-step');
-      if (st === 'done') card.classList.add('done-step');
+      if (st === 'done')    card.classList.add('done-step');
+      if (st === 'skip')    card.classList.add('skipped-step');
 
-      // stepper
+      // stepper circle
       si.classList.remove('done','current');
       if (st === 'done') si.classList.add('done');
       if (st === 'current') si.classList.add('current');
       sc.innerHTML = st === 'done'
         ? (i+1) + '<span class="step-check">✓</span>'
-        : (i + 1);
+        : (i+1);
 
       // card num
       cn.innerHTML = st === 'done'
         ? (i+1) + '<span style="font-size:9px;margin-left:1px">✓</span>'
-        : (i + 1);
+        : (i+1);
 
       // badge
       cb.className = 'card-badge';
-      if (st === 'done') { cb.classList.add('badge-done'); cb.textContent = '完了'; }
+      if (st === 'done')    { cb.classList.add('badge-done');     cb.textContent = '完了'; }
       else if (st === 'current') { cb.classList.add('badge-current'); cb.textContent = '進行中'; }
+      else if (st === 'skip')   { cb.classList.add('badge-skip');    cb.textContent = 'スキップ'; }
       else { cb.classList.add('badge-upcoming'); cb.textContent = i === TOTAL-1 ? '後で' : '次へ'; }
 
       // complete button / branch box
-      if (cbtn) cbtn.style.display = st === 'current' ? (cbtn.classList.contains('branch-box') ? 'block' : 'flex') : 'none';
+      if (cbtn) {
+        const show = st === 'current';
+        cbtn.style.display = show ? (cbtn.classList.contains('branch-box') ? 'block' : 'flex') : 'none';
+      }
     }
 
     // auto open current step
     const curIdx = states.indexOf('current');
     if (curIdx >= 0) {
       const body = document.getElementById('body-' + curIdx);
-      const ct = document.getElementById('ct-' + curIdx);
+      const ct   = document.getElementById('ct-' + curIdx);
       if (!body.classList.contains('open')) {
         body.classList.add('open');
         ct.classList.add('open');
       }
     }
 
-    // all done
-    const allDone = doneCount === TOTAL;
+    // all done?
+    const allDone = states.every(s => s === 'done' || s === 'skip');
     document.getElementById('all-done').classList.toggle('show', allDone);
     document.getElementById('steps-container').style.display = allDone ? 'none' : 'block';
   }
 
+  /* ---- step actions ---- */
   function completeStep(idx) {
     if (states[idx] !== 'current') return;
     states[idx] = 'done';
-    // close current card body
     document.getElementById('body-' + idx).classList.remove('open');
     document.getElementById('ct-' + idx).classList.remove('open');
 
-    if (idx + 1 < TOTAL) {
-      states[idx + 1] = 'current';
-    }
+    // find next non-skip step
+    let next = idx + 1;
+    while (next < TOTAL && states[next] === 'skip') next++;
+    if (next < TOTAL) states[next] = 'current';
+
     save();
     render();
     showToast('ステップ ' + (idx + 1) + ' 完了！');
-    if (idx + 1 < TOTAL) {
+    if (next < TOTAL) {
       setTimeout(() => {
-        document.getElementById('card-' + (idx+1)).scrollIntoView({ behavior: 'smooth', block: 'start' });
+        document.getElementById('card-' + next).scrollIntoView({ behavior: 'smooth', block: 'start' });
       }, 200);
     }
   }
 
   function skipWait() {
-    // mark step 1 (待機) as done, step 2 (卓セット) as current
-    states[1] = 'done';
+    // step2の分岐ボタン「すでに揃っている」→ 待機をスキップしてステップ3へ
+    states[1] = 'skip';
+    states[1] === 'skip'; // already set
+    // find current (step 0 should be done first — but just in case)
+    states[0] = 'done';
     states[2] = 'current';
+    document.getElementById('body-0').classList.remove('open');
+    document.getElementById('ct-0').classList.remove('open');
     document.getElementById('body-1').classList.remove('open');
     document.getElementById('ct-1').classList.remove('open');
     save();
@@ -787,22 +910,22 @@
   }
 
   function resetSteps() {
+    mode = null;
     states = ['current','upcoming','upcoming','upcoming','upcoming'];
     save();
-    render();
+    showEntry();
   }
 
+  /* ---- UI helpers ---- */
   function toggleCard(idx) {
     const body = document.getElementById('body-' + idx);
-    const ct = document.getElementById('ct-' + idx);
+    const ct   = document.getElementById('ct-' + idx);
     body.classList.toggle('open');
     ct.classList.toggle('open');
   }
 
   function jumpToStep(idx) {
-    if (!document.getElementById('body-' + idx).classList.contains('open')) {
-      toggleCard(idx);
-    }
+    if (!document.getElementById('body-' + idx).classList.contains('open')) toggleCard(idx);
     document.getElementById('card-' + idx).scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
 
@@ -826,9 +949,9 @@
     setTimeout(() => t.classList.remove('show'), 2200);
   }
 
-  // init
+  /* ---- init ---- */
   load();
-  render();
+  if (mode) { showFlow(); render(); } else { showEntry(); }
 </script>
 </body>
 </html>
