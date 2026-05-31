@@ -684,20 +684,78 @@
       {
         label: 'ルール\n設定',
         title: 'ルール設定・着卓',
-        desc: '全員揃ったらスタッフを呼んでルールを設定する。',
+        desc: '全員揃ったらスタッフを呼んでルールを設定する。仲間内で事前に決めておこう。',
         body: `
           <div class="detail-section">
-            <div class="tip-box"><strong>ルール設定はスタッフに頼もう</strong><br>卓についたらスタッフを呼んで「ルール設定お願いします」と声をかける。設定が終わればそのまま開始できる。</div>
-            <div class="detail-title">聞かれる主な設定項目</div>
+            <div class="tip-box"><strong>ルール設定はスタッフに頼もう</strong><br>卓についたらスタッフを呼んで「ルール設定お願いします」と声をかける。設定が終わればそのまま開始できる。<br>仲間内のローカルルールは<b>全員で事前に口頭確認</b>しておくとトラブルが少ない。</div>
+          </div>
+
+          <div class="detail-section">
+            <div class="detail-title">① 基本設定（スタッフに伝える）</div>
             <div class="info-list">
               <div class="info-item"><span class="info-icon">👥</span><div class="info-text"><b>ヨンマ or サンマ</b>：4人打ち（ヨンマ）か3人打ち（サンマ）か。関東はヨンマが多い</div></div>
-              <div class="info-item"><span class="info-icon">🌸</span><div class="info-text"><b>花牌・赤ドラ</b>の有無：ルールに入れるか確認される</div></div>
-              <div class="info-item"><span class="info-icon">🎓</span><div class="info-text"><b>学割</b>：学生は学生証を提示すると料金が半額になる店が多い</div></div>
+              <div class="info-item"><span class="info-icon">🔄</span><div class="info-text"><b>東風戦 or 半荘</b>：東風戦は東場4局のみ（約30〜40分）。半荘は東南場の8局（約60〜90分）。時間が少ないなら東風戦</div></div>
+              <div class="info-item"><span class="info-icon">💯</span><div class="info-text"><b>持ち点・返し点</b>：一般的は「25,000点持ち・30,000点返し」。30,000点持ちの店もある。差分がオカ（トップ総取り）になる</div></div>
+              <div class="info-item"><span class="info-icon">🎓</span><div class="info-text"><b>学割</b>：学生証提示で料金が半額になる店が多い</div></div>
               <div class="info-item"><span class="info-icon">⏱️</span><div class="info-text">打つ時間の目安を伝えておくとスムーズ（「2〜3時間くらい」など）</div></div>
             </div>
           </div>
+
           <div class="detail-section">
-            <div class="detail-title">卓の操作</div>
+            <div class="detail-title">② ドラ関連（仲間内で決める）</div>
+            <div class="info-list">
+              <div class="info-item"><span class="info-icon">🀄</span><div class="info-text"><b>赤ドラ</b>：なし・各色1枚（5m/5p/5s）・各色2枚から選ぶ。枚数が増えるほど点数が荒れやすい</div></div>
+              <div class="info-item"><span class="info-icon">🃏</span><div class="info-text"><b>裏ドラ</b>：リーチ和了時に表示。あり/なし。なしにすると点数がおとなしくなる</div></div>
+              <div class="info-item"><span class="info-icon">➕</span><div class="info-text"><b>カンドラ・槓裏ドラ</b>：カンするたびにドラが増える。槓裏はリーチ時のカンにさらに裏ドラが付く</div></div>
+              <div class="info-item"><span class="info-icon">🌸</span><div class="info-text"><b>花牌（はなぱい）</b>：一部の自動卓に入っている特殊牌。得点ボーナスになるローカルルール。店のデフォルト設定に従うことが多い</div></div>
+              <div class="info-item"><span class="info-icon">⬆️</span><div class="info-text"><b>北抜き（サンマのみ）</b>：サンマでは北を抜きドラとして使うルールが多い。あり/なしを確認</div></div>
+            </div>
+          </div>
+
+          <div class="detail-section">
+            <div class="detail-title">③ 役・進行ルール（仲間内で決める）</div>
+            <div class="info-list">
+              <div class="info-item"><span class="info-icon">🍜</span><div class="info-text"><b>喰いタン（後付け）</b>：鳴いてタンヤオのみでアガれるか。「あり」が一般的だが「なし」にすると手役重視になる</div></div>
+              <div class="info-item"><span class="info-icon">⚡</span><div class="info-text"><b>一発</b>：リーチ後1順以内の和了に+1翻。あり/なし</div></div>
+              <div class="info-item"><span class="info-icon">🔂</span><div class="info-text"><b>リーチ後の暗カン</b>：テンパイの形が変わらない場合のみ許可が一般的。「完全禁止」にする仲間内もいる</div></div>
+              <div class="info-item"><span class="info-icon">🌊</span><div class="info-text"><b>流し満貫</b>：自分の捨て牌が全て端牌・字牌で流局した場合に満貫点を得るルール。あり/なし</div></div>
+              <div class="info-item"><span class="info-icon">🃏</span><div class="info-text"><b>ダブルリーチ</b>：第1打でテンパイしてのリーチに+1翻。あり/なし</div></div>
+              <div class="info-item"><span class="info-icon">🏆</span><div class="info-text"><b>ダブル役満・トリプル役満</b>：大三元＋字一色など複合役満を2倍・3倍にするか。なしにすると最大1役満（32,000点）まで</div></div>
+              <div class="info-item"><span class="info-icon">🛑</span><div class="info-text"><b>途中流局</b>：九種九牌（配牌で么九牌9種以上）・四風子連打・四家リーチ・四カン流れなどの途中流局をどうするか</div></div>
+              <div class="info-item"><span class="info-icon">💥</span><div class="info-text"><b>パオ（責任払い）</b>：大三元・大四喜・字一色の確定牌を鳴かせた人が放銃分を責任払いするルール。あり/なし</div></div>
+              <div class="info-item"><span class="info-icon">🔵</span><div class="info-text"><b>青天井</b>：点数の上限をなくして符・翻数通りに計算するルール。通常は満貫以上に打ち止めがあるが、青天井は役満を超えた計算も有効になる</div></div>
+            </div>
+          </div>
+
+          <div class="detail-section">
+            <div class="detail-title">④ 精算ルール（仲間内で決める）</div>
+            <div class="info-list">
+              <div class="info-item"><span class="info-icon">📊</span><div class="info-text"><b>ウマ</b>：順位によるボーナス/ペナルティ。よく使われるのは「5-10」（1位+10pt、2位+5pt、3位-5pt、4位-10pt）や「10-30」（より差が大きい）</div></div>
+              <div class="info-item"><span class="info-icon">🎁</span><div class="info-text"><b>オカ</b>：25,000点持ち・30,000点返しなら差の5,000点×4人分（計20,000点）がオカとしてトップに入る。返し点の設定次第で変わる</div></div>
+              <div class="info-item"><span class="info-icon">🏅</span><div class="info-text"><b>飛び賞（とびしょう）</b>：持ち点が0点以下になった（ハコ割れ）プレイヤーから一定点を受け取るルール。「あり（5pt）」「なし」など</div></div>
+              <div class="info-item"><span class="info-icon">🎰</span><div class="info-text"><b>チップ（ご祝儀）</b>：一発・裏ドラ・嶺上開花・役満などで獲得できるボーナス。1枚いくらかを決める。なしにするとシンプルになる</div></div>
+              <div class="info-item"><span class="info-icon">📏</span><div class="info-text"><b>積み棒の点数</b>：通常1本=300点（ツモ100点×3人 or 放銃者300点）。仲間内によっては「1本600点」などに変えるケースも</div></div>
+            </div>
+          </div>
+
+          <div class="detail-section">
+            <div class="detail-title">⑤ レート（点数を現金換算する場合）</div>
+            <div class="tip-box" style="background:#fff7ed;border-color:#fed7aa;color:#7c2d12">
+              <strong>⚠️ 現金を賭けることは賭博罪にあたる可能性があります</strong><br>
+              以下は仲間内で耳にするレート用語の解説です。実際に現金精算を行う場合は法律上のリスクを理解した上で自己責任で判断してください。
+            </div>
+            <div class="info-list">
+              <div class="info-item"><span class="info-icon">💴</span><div class="info-text"><b>テンゴ（点五）</b>：1000点＝500円換算のレート。「5」とも呼ばれる。フリー雀荘でも見かける水準</div></div>
+              <div class="info-item"><span class="info-icon">💴</span><div class="info-text"><b>テンピン（点一/ピン）</b>：1000点＝1000円換算。フリー雀荘の標準的なレートのひとつ</div></div>
+              <div class="info-item"><span class="info-icon">💴</span><div class="info-text"><b>点三（テンサン）</b>：1000点＝300円換算。入門者向けの低レート</div></div>
+              <div class="info-item"><span class="info-icon">📜</span><div class="info-text" style="color:#9a3412">
+                <b>※昔はこういうのがあったようです</b>：「天ゴ（てんご）」と呼ばれる高レート（1点＝10円以上など）は、フリー雀荘黎明期に仲間内で行われていたとされる用語で、現在は明確に賭博罪の対象となり得ます。現代の雀荘では使われない表現です
+              </div></div>
+            </div>
+          </div>
+
+          <div class="detail-section">
+            <div class="detail-title">⑥ 卓の操作</div>
             <div class="info-list">
               <div class="info-item"><span class="info-icon">🔴</span><div class="info-text"><b>スタートボタン</b>で洗牌開始。スタッフがやってくれることも多い</div></div>
               <div class="info-item"><span class="info-icon">🀄</span><div class="info-text">牌山が上がったらサイコロを振って山・親を決める</div></div>
@@ -826,6 +884,12 @@
     save();
     showFlow();
     render();
+    // セットモードはルール設定（ステップ２）を最初から展開して参照できるようにする
+    if (m === 'set') {
+      const body1 = document.getElementById('body-1');
+      const ct1   = document.getElementById('ct-1');
+      if (body1) { body1.classList.add('open'); ct1.classList.add('open'); }
+    }
   }
 
   function resetMode() {
